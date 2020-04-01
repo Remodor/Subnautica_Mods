@@ -1,11 +1,11 @@
 {
-  "Id": "SolarPanelPowerModifier",
-  "DisplayName": "Solar Panel power modifier",
+  "Id": "Rm_PowerModifier",
+  "DisplayName": "Power Modifier",
   "Author": "Remodor",
   "Version": "1.0.0",
-  "Requires": [ ],
-  "Enable": true,
-  "AssemblyName": "SolarPanelPowerModifier.dll",
-  "EntryMethod": "SolarPanelPowerModifier.QPatch.Patch",
-  "Config": {}
+  "Requires": [],
+  "AssemblyName": "Rm_PowerModifier.dll",
+  "EntryMethod": "Rm_PowerModifier.QPatch.Patch",
+  "Config": {},
+  "Enable": true
 }

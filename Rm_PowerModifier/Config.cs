@@ -20,7 +20,7 @@ namespace Rm_Config
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine(string.Format("[{0}] ConfigFile not found!", typeof(T).Namespace));
+                Console.WriteLine(string.Format("[{0}] ConfigFile not found! -> creating ConfigFile..", typeof(T).Namespace));
                 configuration = new T();
                 SaveConfiguration();
             }
@@ -32,11 +32,9 @@ namespace Rm_Config
         }
         internal static void SaveConfiguration()
         {
-            Console.WriteLine(string.Format("[{0}] Creating ConfigFile:", typeof(T).Namespace));
             string configPath = CreateConfigPath();
             string configJson = JsonConvert.SerializeObject(configuration, Formatting.Indented);
             File.WriteAllText(configPath, configJson);
-            Console.WriteLine(string.Format("[{0}] Done..", typeof(T).Namespace));
         }
         internal static T Get()
         {

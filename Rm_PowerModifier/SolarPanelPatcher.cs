@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using Rm_Config;
 
 namespace Rm_PowerModifier
 {
@@ -10,7 +9,7 @@ namespace Rm_PowerModifier
         private static float powerLevel;
         private static float powerModifier;
 
-        public static void SetPowerModider(float modifier)
+        public static void SetPowerModifier(float modifier)
         {
             powerModifier = modifier;
         }
@@ -24,11 +23,12 @@ namespace Rm_PowerModifier
         [HarmonyPostfix]
         public static void Postfix(SolarPanel __instance)
         {
-            if (__instance.gameObject.GetComponent<Constructable>().constructed)
+            float powerDelta = __instance.powerSource.power - powerLevel;
+            if (powerDelta < 0)
             {
-                float powerDelta = __instance.powerSource.power - powerLevel;
-                __instance.powerSource.power = powerLevel + powerDelta * powerModifier;
+                return;
             }
+            __instance.powerSource.power = powerLevel + powerDelta * powerModifier;
         }
     }
 }
