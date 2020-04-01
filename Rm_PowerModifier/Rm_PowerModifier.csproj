@@ -64,14 +64,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BioReactorPatcher.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="NuclearReactorPatcher.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="PowerModifier.cs" />
-    <Compile Include="ThermalPlantPatcher.cs" />
-    <Compile Include="SolarPanelPatcher.cs" />
-    <Compile Include="QPatch.cs" />
+    <Compile Include="src\patcher\BioReactorPatcher.cs" />
+    <Compile Include="src\configuration\Config.cs" />
+    <Compile Include="src\patcher\NuclearReactorPatcher.cs" />
+    <Compile Include="src\configuration\Options.cs" />
+    <Compile Include="src\PowerModifier.cs" />
+    <Compile Include="src\patcher\ThermalPlantPatcher.cs" />
+    <Compile Include="src\patcher\SolarPanelPatcher.cs" />
+    <Compile Include="src\QPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
