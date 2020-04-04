@@ -7,7 +7,7 @@ namespace Rm_PowerModifier
     internal class SolarPanel_Update_Patch
     {
         private static float powerLevel;
-        private static float powerModifier;
+        private static float powerModifier = 1.0f;
 
         public static void SetPowerModifier(float modifier)
         {

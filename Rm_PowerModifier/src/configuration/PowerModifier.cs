@@ -1,7 +1,4 @@
-﻿using Rm_Config;
-using System;
-
-namespace Rm_PowerModifier
+﻿namespace Rm_PowerModifier
 {
     public class PowerModifier
     {
