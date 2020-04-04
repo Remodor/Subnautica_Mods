@@ -3,7 +3,7 @@
 namespace Rm_PowerModifier
 {
     [HarmonyPatch(typeof(ThermalPlant))]
-    [HarmonyPatch("AddPower")]
+    [HarmonyPatch(nameof(ThermalPlant.AddPower))]
     internal class ThermalPlant_Update_Patch
     {
         private static float powerLevel;
@@ -24,7 +24,11 @@ namespace Rm_PowerModifier
         public static void Postfix(ThermalPlant __instance)
         {
             float powerDelta = __instance.powerSource.power - powerLevel;
-            __instance.powerSource.power = powerLevel + powerDelta * powerModifier;
+            if (powerDelta < 0)
+            {
+                return;
+            }
+            __instance.powerSource.SetPower(powerLevel + powerDelta * powerModifier);
         }
     }
 }

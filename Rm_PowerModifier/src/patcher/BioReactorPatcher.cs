@@ -3,7 +3,7 @@
 namespace Rm_PowerModifier
 {
     [HarmonyPatch(typeof(BaseBioReactor))]
-    [HarmonyPatch("Update")]
+    [HarmonyPatch(nameof(BaseBioReactor.Update))]
     internal class BioReactor_Update_Patch
     {
         private static float powerLevel;
@@ -24,7 +24,11 @@ namespace Rm_PowerModifier
         public static void Postfix(BaseBioReactor __instance)
         {
             float powerDelta = __instance._powerSource.power - powerLevel;
-            __instance._powerSource.power = powerLevel + powerDelta * powerModifier;
+            if (powerDelta < 0)
+            {
+                return;
+            }
+            __instance._powerSource.SetPower(powerLevel + powerDelta * powerModifier);
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace Rm_PowerModifier
 {
     [HarmonyPatch(typeof(SolarPanel))]
-    [HarmonyPatch("Update")]
+    [HarmonyPatch(nameof(SolarPanel.Update))]
     internal class SolarPanel_Update_Patch
     {
         private static float powerLevel;
@@ -28,7 +28,7 @@ namespace Rm_PowerModifier
             {
                 return;
             }
-            __instance.powerSource.power = powerLevel + powerDelta * powerModifier;
+            __instance.powerSource.SetPower(powerLevel + powerDelta * powerModifier);
         }
     }
 }
