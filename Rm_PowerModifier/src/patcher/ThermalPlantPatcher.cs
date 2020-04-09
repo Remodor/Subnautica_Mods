@@ -1,34 +1,47 @@
 ﻿using Harmony;
+using UnityEngine;
 
 namespace Rm_PowerModifier
 {
     [HarmonyPatch(typeof(ThermalPlant))]
     [HarmonyPatch(nameof(ThermalPlant.AddPower))]
-    internal class ThermalPlant_Update_Patch
+    internal class ThermalPlant_PowerModifier_Patch
     {
         private static float powerLevel;
         private static float powerModifier = 1.0f;
 
-        public static void SetPowerModifier(float modifier)
+        internal static void SetPowerModifier(float modifier)
         {
             powerModifier = modifier;
         }
 
         [HarmonyPrefix]
-        public static bool Prefix(ThermalPlant __instance)
+        internal static bool Prefix(ThermalPlant __instance)
         {
             powerLevel = __instance.powerSource.power;
             return true;
         }
         [HarmonyPostfix]
-        public static void Postfix(ThermalPlant __instance)
+        internal static void Postfix(ThermalPlant __instance)
         {
             float powerDelta = __instance.powerSource.power - powerLevel;
-            if (powerDelta < 0)
-            {
-                return;
-            }
             __instance.powerSource.SetPower(powerLevel + powerDelta * powerModifier);
+        }
+    }
+    [HarmonyPatch(typeof(ThermalPlant))]
+    [HarmonyPatch(nameof(ThermalPlant.Start))]
+    internal class ThermalPlant_MaxPower_Patch
+    {
+        private static float maxPower = 250f;
+        internal static void SetMaxPower(float power)
+        {
+            maxPower = power;
+        }
+
+        [HarmonyPostfix]
+        internal static void Postfix(ThermalPlant __instance)
+        {
+            __instance.powerSource.maxPower = Mathf.Max(maxPower, 0);
         }
     }
 }

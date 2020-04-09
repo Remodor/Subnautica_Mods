@@ -1,34 +1,48 @@
 ﻿using Harmony;
+using UnityEngine;
+
 
 namespace Rm_PowerModifier
 {
     [HarmonyPatch(typeof(BaseNuclearReactor))]
     [HarmonyPatch(nameof(BaseNuclearReactor.Update))]
-    internal class NuclearReactor_Update_Patch
+    internal class NuclearReactor_PowerModifier_Patch
     {
         private static float powerLevel;
         private static float powerModifier = 1.0f;
 
-        public static void SetPowerModifier(float modifier)
+        internal static void SetPowerModifier(float modifier)
         {
             powerModifier = modifier;
         }
 
         [HarmonyPrefix]
-        public static bool Prefix(BaseNuclearReactor __instance)
+        internal static bool Prefix(BaseNuclearReactor __instance)
         {
             powerLevel = __instance._powerSource.power;
             return true;
         }
         [HarmonyPostfix]
-        public static void Postfix(BaseNuclearReactor __instance)
+        internal static void Postfix(BaseNuclearReactor __instance)
         {
             float powerDelta = __instance._powerSource.power - powerLevel;
-            if (powerDelta < 0)
-            {
-                return;
-            }
             __instance._powerSource.SetPower(powerLevel + powerDelta * powerModifier);
+        }
+    }
+    [HarmonyPatch(typeof(BaseNuclearReactor))]
+    [HarmonyPatch(nameof(BaseNuclearReactor.Start))]
+    internal class NuclearReactor_MaxPower_Patch
+    {
+        private static float maxPower = 2500f;
+        internal static void SetMaxPower(float power)
+        {
+            maxPower = power;
+        }
+
+        [HarmonyPostfix]
+        internal static void Postfix(BaseNuclearReactor __instance)
+        {
+            __instance._powerSource.maxPower = Mathf.Max(maxPower, 0);
         }
     }
 }
