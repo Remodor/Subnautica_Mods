@@ -1,0 +1,11 @@
+{
+  "Id": "Rm_FastKnownScan",
+  "DisplayName": "Fast known scan",
+  "Author": "Remodor",
+  "Version": "1.0.0",
+  "Requires": [],
+  "AssemblyName": "Rm_FastKnownScan.dll",
+  "EntryMethod": "Rm_FastKnownScan.QPatch.Patch",
+  "Config": {},
+  "Enable": true
+}
