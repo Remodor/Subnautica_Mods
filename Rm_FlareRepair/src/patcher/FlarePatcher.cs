@@ -84,9 +84,11 @@ namespace Rm_FlareRepair
                 __instance.flareActiveState = true;
                 return false;
             }
+            __instance.flareActiveState = false;
             return true;
         }
     }
+
     [HarmonyPatch(typeof(Flare))]
     [HarmonyPatch(nameof(Flare.Update))]
     internal class Flare_EnergyDraw_Patch
@@ -121,7 +123,6 @@ namespace Rm_FlareRepair
                 {
                     __instance.fxControl.StopAndDestroy(1, 2f);
                     __instance.fxControl.Play(2);
-                    __instance.fxIsPlaying = false;
                 }
                 if (timeLeft != 0)
                 {
@@ -133,7 +134,7 @@ namespace Rm_FlareRepair
                 } else
                 {
                     __instance.loopingSound.Stop();
-                    __instance.light.intensity = 0f;
+                    __instance.light.enabled = false;
                     __instance.energyLeft = 0;
                 }
             }
@@ -144,14 +145,33 @@ namespace Rm_FlareRepair
     [HarmonyPatch(nameof(Flare.Awake))]
     internal class Flare_Load_Patch
     {
-        [HarmonyPostfix]
-        internal static void PostFix(Flare __instance)
+        [HarmonyPrefix]
+        internal static bool Prefix(Flare __instance)
         {
+            
+            __instance.originalIntensity = __instance.light.intensity;
+            __instance.originalrange = __instance.light.range;
+            __instance.light.intensity = 0f;
+            __instance.light.range = 0f;
+            __instance.sequence = new Sequence();
             if (__instance.hasBeenThrown)
             {
                 __instance.capRenderer.enabled = false;
-                __instance.throwDuration = 0.00f;
+                __instance.throwDuration = 0f;
+                __instance.flareActiveState = false;
+                if (__instance.fxControl)
+                {
+                    __instance.fxControl.Stop();
+                    if (__instance.energyLeft != 0)
+                    {
+                        __instance.fxControl.Play(1);
+                        __instance.fxIsPlaying = true;
+                        __instance.light.enabled = true;
+                        __instance.flareActiveState = true;
+                    }
+                }
             }
+            return false; //Full override!
         }
     }
 }
