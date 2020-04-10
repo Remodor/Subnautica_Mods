@@ -94,9 +94,14 @@ namespace Rm_FlareRepair
     internal class Flare_EnergyDraw_Patch
     {
         private static float totalEnergy = 600f;
+        private static float intensityModifier = 1f;
         internal static void SetTotalEnergy(float totalEnergy)
         {
             Flare_EnergyDraw_Patch.totalEnergy = totalEnergy;
+        }
+        internal static void SetIntensityModifier(float intensityModifier)
+        {
+            Flare_EnergyDraw_Patch.intensityModifier = intensityModifier;
         }
         [HarmonyPrefix]
         internal static bool Prefix(Flare __instance)
@@ -111,6 +116,7 @@ namespace Rm_FlareRepair
                 __instance.flareActivateTime = __instance.energyLeft;
                 __instance.sequence.Update();
                 __instance.UpdateLight();
+                __instance.light.intensity *= intensityModifier;
             } else
             {
                 __instance.light.intensity = 0f;
