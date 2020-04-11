@@ -1,0 +1,11 @@
+{
+  "Id": "Rm_VehicleLoadFix",
+  "DisplayName": "Vehicle Load Fix",
+  "Author": "Remodor",
+  "Version": "1.0.0",
+  "Requires": [],
+  "AssemblyName": "Rm_VehicleLoadFix.dll",
+  "EntryMethod": "Rm_VehicleLoadFix.QPatch.Patch",
+  "Config": {},
+  "Enable": true
+}
