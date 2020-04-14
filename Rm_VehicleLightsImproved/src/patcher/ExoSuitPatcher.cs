@@ -18,14 +18,16 @@ namespace Rm_VehicleLightsImproved
         public ToggleLightExosuit()
         {
             lightsParent = this.transform.Find("lights_parent").gameObject;
-            energyInterface = GetComponentInParent<Vehicle>().energyInterface;
+            energyInterface = GetComponentInParent<EnergyInterface>();
+            var lights = lightsParent.GetComponentsInChildren<Light>();
+            lightLeft = lights[0];
+            lightRight = lights[1];
             var seaMothToggleLights = SeaMothTemplate.SeaMoth.toggleLights;
             lightsOnSound = seaMothToggleLights.lightsOnSound;
             lightsOffSound = seaMothToggleLights.lightsOffSound;
             onSound = seaMothToggleLights.onSound;
             offSound = seaMothToggleLights.offSound;
         }
-
         public bool ToggleLights()
         {
             SetLightsActive(!lightIsActive);
@@ -49,9 +51,10 @@ namespace Rm_VehicleLightsImproved
                 }
             }
         }
-        public void SyncLight()
+        private void FixLightsActive()
         {
-            lightsParent.SetActive(lightIsActive);
+            lightLeft.gameObject.SetActive(true);
+            lightRight.gameObject.SetActive(true);
         }
         private void UpdateLightEnergy()
         {
@@ -63,12 +66,14 @@ namespace Rm_VehicleLightsImproved
                 {
                     SetLightsActive(false);
                 }
+                //TODO check docking behavior
             }
         }
         private void Update()
         {
             if (base.gameObject.activeInHierarchy)
             {
+                FixLightsActive();
                 UpdateLightEnergy();
                 if (isPilotMode 
                     && Input.GetKeyDown(ExosuitSettings.exosuitToggleLightKey) 
@@ -80,6 +85,8 @@ namespace Rm_VehicleLightsImproved
                 }
             }
         }
+        private Light lightLeft;
+        private Light lightRight;
         public bool isPilotMode = false;
         private bool lightIsActive = true;
         private GameObject lightsParent;
@@ -93,7 +100,6 @@ namespace Rm_VehicleLightsImproved
     [HarmonyPatch(nameof(Exosuit.Start))]
     internal class Exosuit_Start_Patch
     {
-        [HarmonyPostfix]
         internal static void Postfix(Exosuit __instance)
         {
             var exoToggleLights = __instance.gameObject.AddComponent<ToggleLightExosuit>();
@@ -104,6 +110,7 @@ namespace Rm_VehicleLightsImproved
     [HarmonyPatch(nameof(Exosuit.OnPilotModeBegin))]
     internal static class Exosuit_OnPilotModeBegin_Patch
     {
+        [HarmonyPostfix]
         private static void Postfix(Exosuit __instance)
         {
             __instance.GetAllComponentsInChildren<VFXVolumetricLight>()
@@ -115,6 +122,7 @@ namespace Rm_VehicleLightsImproved
     [HarmonyPatch(nameof(Exosuit.OnPilotModeEnd))]
     internal static class Exosuit_OnPilotModeEnd_Patch
     {
+        [HarmonyPostfix]
         private static void Postfix(Exosuit __instance)
         {
             __instance.GetAllComponentsInChildren<VFXVolumetricLight>()
@@ -132,21 +140,6 @@ namespace Rm_VehicleLightsImproved
             if (docked)
             {
                 __instance.GetComponent<ToggleLightExosuit>().SetLightsActive(false);
-            }
-        }
-    }
-    [HarmonyPatch(typeof(Exosuit))]
-    [HarmonyPatch(nameof(Exosuit.OnPoweredChanged))]
-    internal class Exosuit_OnPoweredChanged_Patch
-    {
-        [HarmonyPrefix]
-        internal static void Postfix(Exosuit __instance, bool powered)
-        {
-            var exoToggleLight = __instance.GetComponent<ToggleLightExosuit>();
-            if (exoToggleLight)
-            {
-                exoToggleLight.SyncLight();
-                Console.WriteLine("#80 toggled light");
             }
         }
     }

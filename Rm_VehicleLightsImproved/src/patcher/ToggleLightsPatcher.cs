@@ -5,7 +5,7 @@ using System;
 namespace Rm_VehicleLightsImproved
 {
     [HarmonyPatch(typeof(ToggleLights))]
-    [HarmonyPatch(nameof(ToggleLights.OnPoweredChanged))]
+    [HarmonyPatch("OnPoweredChanged")]
     internal class ToggleLights_OnPoweredChanged_Patch
     {
         [HarmonyPrefix]

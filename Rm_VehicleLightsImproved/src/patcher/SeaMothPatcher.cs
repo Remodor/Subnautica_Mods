@@ -20,7 +20,7 @@ namespace Rm_VehicleLightsImproved
         }
     }
     [HarmonyPatch(typeof(SeaMoth))]
-    [HarmonyPatch(nameof(SeaMoth.OnDockedChanged))]
+    [HarmonyPatch("OnDockedChanged")]
     internal class SeaMoth_OnDockedChanged_Patch
     {
         [HarmonyPostfix]
