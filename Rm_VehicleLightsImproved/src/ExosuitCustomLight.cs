@@ -36,15 +36,11 @@ namespace Rm_VehicleLightsImproved
         }
         private void CreateVolumetricLights()
         {
-            var exosuit = GetComponentInParent<Exosuit>();
             CreateVolumetricLight(lightLeft);
             CreateVolumetricLight(lightRight);
         }
         private void CreateVolumetricLight(Light light)
         {
-
-
-
             var templateVolumetricLight = SeaMothTemplate.SeaMoth.toggleLights.lightsParent.GetComponentInChildren<VFXVolumetricLight>();
             var volumetricLight = light.gameObject.AddComponent<VFXVolumetricLight>();
 
@@ -52,33 +48,20 @@ namespace Rm_VehicleLightsImproved
             foreach (System.Reflection.FieldInfo field in volumetricLightFields)
             {
                 field.SetValue(volumetricLight, field.GetValue(templateVolumetricLight));
-                if (field != null)
-                {
-                    Console.WriteLine("#2 {0}: {1}, {2}", field, field.GetValue(templateVolumetricLight), field.GetValue(volumetricLight));
-                }
             }
 
             var volume = GameObject.Instantiate(templateVolumetricLight.volumGO, light.transform).gameObject;
             volume.transform.localScale = CalculateLightCone(light);
             var offset = new Vector3(0, 0.41f, -0.37f);
             light.transform.localPosition += offset;
-            //volume.transform.localPosition = offset;
-
 
             volumetricLight.volumGO = volume;
             volumetricLight.lightSource = light;
             volumetricLight.block = null;
             volumetricLight.angle = (int)light.spotAngle;
             volumetricLight.intensity = 0.45f;
-            Console.WriteLine("#6 lightRotation: {0} / {1} ", light.transform.localRotation.eulerAngles, volume.transform.localRotation.eulerAngles);
-
 
             volumetricLight.Awake();
-            Console.WriteLine("#3 lightIntensity: {0} / {1} / {2} / {3}", light.intensity, templateVolumetricLight.lightSource.intensity, volumetricLight.lightIntensity, volumetricLight.intensity);
-            Console.WriteLine("#3 lightRange: {0} / {1} / {2}", light.range, templateVolumetricLight.lightSource.range, volumetricLight.range);
-            Console.WriteLine("#3 spotAngle: {0} / {1} / {2}", light.spotAngle, templateVolumetricLight.lightSource.spotAngle, light.innerSpotAngle);
-            Console.WriteLine("#3 angle: {0} / {1}", volumetricLight.angle, templateVolumetricLight.angle);
-            Console.WriteLine("#3 localScale: {0} / {1}", volumetricLight.volumGO.transform.localScale, templateVolumetricLight.volumGO.transform.localScale);
         }
         public Vector3 CalculateLightCone(Light light)
         {
@@ -94,8 +77,6 @@ namespace Rm_VehicleLightsImproved
                 xy,
                 range
             );
-            Console.WriteLine("#5 {0}", cone);
-
             return cone;
         }
         public bool ToggleLights()
@@ -136,7 +117,6 @@ namespace Rm_VehicleLightsImproved
                 {
                     SetLightsActive(false);
                 }
-                //TODO check docking behavior
             }
         }
         private void Update()
