@@ -7,11 +7,11 @@ namespace Rm_VehicleLightsImproved
     internal static class ExosuitSettings
     {
         internal static float lightEnergyConsumption = 0f;
-        internal static KeyCode exosuitToggleLightKey = (KeyCode)GameInput.Button.Deconstruct;
+        internal static KeyCode exosuitToggleLightKey = KeyCode.Mouse2;
     }
     internal static class SeaMothTemplate
     {
-        internal static SeaMoth SeaMoth = CraftData.InstantiateFromPrefab(TechType.Seamoth).GetComponent<SeaMoth>();
+        internal static SeaMoth SeaMoth = CraftData.GetBuildPrefab(TechType.Seamoth).GetComponent<SeaMoth>();
     }
     public class ExosuitCustomLight : MonoBehaviour
     {
@@ -43,6 +43,11 @@ namespace Rm_VehicleLightsImproved
         {
             var templateVolumetricLight = SeaMothTemplate.SeaMoth.toggleLights.lightsParent.GetComponentInChildren<VFXVolumetricLight>();
             var volumetricLight = light.gameObject.AddComponent<VFXVolumetricLight>();
+
+            if (templateVolumetricLight == null)
+            {
+                Console.WriteLine("#7 found error");
+            }
 
             System.Reflection.FieldInfo[] volumetricLightFields = volumetricLight.GetType().GetFields();
             foreach (System.Reflection.FieldInfo field in volumetricLightFields)

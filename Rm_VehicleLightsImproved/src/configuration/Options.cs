@@ -26,6 +26,18 @@ namespace Rm_VehicleLightsImproved
                     Config<LightsConfig>.Get().ExosuitLightEnergyPerDay = e.Value;
                     Changed();
                     return;
+                case "CyclopsInternalLightEnergyPerDay":
+                    Config<LightsConfig>.Get().CyclopsInternalLightEnergyPerDay = e.Value;
+                    Changed();
+                    return;
+                case "CyclopsExternalLightEnergyPerDay":
+                    Config<LightsConfig>.Get().CyclopsExternalLightEnergyPerDay = e.Value;
+                    Changed();
+                    return;
+                case "CyclopsEmergencyLightEnergyPerDay":
+                    Config<LightsConfig>.Get().CyclopsEmergencyLightEnergyPerDay = e.Value;
+                    Changed();
+                    return;
             }
         }
         public void Options_KeybindChanged(object sender, KeybindChangedEventArgs e)
@@ -47,7 +59,9 @@ namespace Rm_VehicleLightsImproved
         {
             GameObject gameObject = e.GameObject;
 
-            if (e.Id == "SeaMothLightEnergyPerDay" || e.Id == "ExosuitLightEnergyPerDay")
+            if (e.Id == "SeaMothLightEnergyPerDay" || e.Id == "ExosuitLightEnergyPerDay"
+                || e.Id == "CyclopsInternalLightEnergyPerDay" || e.Id == "CyclopsExternalLightEnergyPerDay"
+                || e.Id == "CyclopsEmergencyLightEnergyPerDay")
             {
                 GameObject slider = gameObject.transform.Find("Slider").gameObject;
                 slider.AddComponent<StepSlider_1>();
@@ -64,8 +78,11 @@ namespace Rm_VehicleLightsImproved
         }
         public override void BuildModOptions()
         {
-            AddSliderOption("SeaMothLightEnergyPerDay", "Energy (per Day): Seamoth", 0f, 200f, Config<LightsConfig>.Get().SeaMothLightEnergyPerDay, 50f);
-            AddSliderOption("ExosuitLightEnergyPerDay", "Energy (per Day): Prawn Suit", 0f, 200f, Config<LightsConfig>.Get().ExosuitLightEnergyPerDay, 50f);
+            AddSliderOption("SeaMothLightEnergyPerDay", "E.p.Day: Seamoth", 0f, 200f, Config<LightsConfig>.Get().SeaMothLightEnergyPerDay, 50f);
+            AddSliderOption("ExosuitLightEnergyPerDay", "E.p.Day: Prawn Suit", 0f, 200f, Config<LightsConfig>.Get().ExosuitLightEnergyPerDay, 50f);
+            AddSliderOption("CyclopsInternalLightEnergyPerDay", "E.p.Day: Cyclops Internal", 0f, 200f, Config<LightsConfig>.Get().CyclopsInternalLightEnergyPerDay, 25f);
+            AddSliderOption("CyclopsEmergencyLightEnergyPerDay", "E.p.Day: Cyclops Emergency", 0f, 200f, Config<LightsConfig>.Get().CyclopsEmergencyLightEnergyPerDay, 10f);
+            AddSliderOption("CyclopsExternalLightEnergyPerDay", "E.p.Day: Cyclops External", 0f, 200f, Config<LightsConfig>.Get().CyclopsExternalLightEnergyPerDay, 100f);
             AddKeybindOption("ExosuitToggleLightKey", "Exosuit light toggle", GameInput.GetPrimaryDevice(), Config<LightsConfig>.Get().ExosuitToggleLightKey);
             constructed = true;
         }

@@ -2,10 +2,10 @@
 using System;
 using UnityEngine;
 
-namespace Rm_VehicleLightsImproved.src.patcher
+namespace Rm_VehicleLightsImproved
 {
     [HarmonyPatch(typeof(Vehicle))]
-    [HarmonyPatch("ReplenishOxygen")]
+    [HarmonyPatch(nameof(Vehicle.ReplenishOxygen))]
     internal class Vehicle_ReplenishOxygen_Patch
     {
         [HarmonyPrefix]
