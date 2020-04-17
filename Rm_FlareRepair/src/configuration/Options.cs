@@ -40,7 +40,7 @@ namespace Rm_FlareRepair
         {
             GameObject gameObject = e.GameObject;
 
-            if (e.Id == "FlareTotalDuration" || e.Id == "FlareIntensityModifier")
+            if (e.Id == "FlareTotalDuration")
             {
                 GameObject slider = gameObject.transform.Find("Slider").gameObject;
                 slider.AddComponent<CustomSliderValue>();
@@ -80,7 +80,7 @@ namespace Rm_FlareRepair
         public override void BuildModOptions()
         {
             AddSliderOption("FlareTotalDuration", "Total Duration (Game Days)", 0.0f, 1.0f, Config<FlareConfig>.Get().TotalDuration, 0.5f);
-            AddSliderOption("FlareIntensityModifier", "Intensity Modifier", 0.0f, 1.0f, Config<FlareConfig>.Get().IntensityModifier, 1.0f);
+            AddSliderOption("FlareIntensityModifier", "Intensity Modifier", 0.0f, 2.0f, Config<FlareConfig>.Get().IntensityModifier, 1.0f, "{0:F2}");
             constructed = true;
         }
     }
