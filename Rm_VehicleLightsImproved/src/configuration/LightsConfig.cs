@@ -10,6 +10,12 @@ namespace Rm_VehicleLightsImproved
         public float CyclopsInternalLightEnergyPerDay = 25f;
         public float CyclopsEmergencyLightEnergyPerDay = 10f;
         public float CyclopsExternalLightEnergyPerDay = 100f;
+        public float CyclopsIdlingEnergyPerDay = 10f;
+        public float CyclopsCameraLightEnergyPerDay = 75f;
+        public bool CyclopsAlternativeCameraControls = true;
+        public float CyclopsCameraRotationDamper = 3f;
+        public float CyclopsCameraLightRange = 55f;
+        public float CyclopsCameraLightIntensity = 1f;
         public KeyCode ExosuitToggleLightKey = KeyCode.Mouse2;
 
         public void ApplyModifier()
@@ -20,6 +26,12 @@ namespace Rm_VehicleLightsImproved
             CyclopsSettings.internalLightEnergyConsumption = ConvertToSeconds(CyclopsInternalLightEnergyPerDay);
             CyclopsSettings.emergencyLightEnergyConsumption = ConvertToSeconds(CyclopsEmergencyLightEnergyPerDay);
             CyclopsSettings.externalLightEnergyConsumption = ConvertToSeconds(CyclopsExternalLightEnergyPerDay);
+            CyclopsSettings.engineIdlingEnergyConsumption= ConvertToSeconds(CyclopsIdlingEnergyPerDay);
+            CyclopsSettings.cameraRotationDamper = Mathf.Max(0.1f, CyclopsCameraRotationDamper);
+            CyclopsSettings.alternativeCameraControls = CyclopsAlternativeCameraControls;
+            CyclopsSettings.cyclopsCameraLightRange = CyclopsCameraLightRange;
+            CyclopsSettings.cyclopsCameraLightIntensity = Mathf.Max(0.1f, CyclopsCameraLightIntensity);
+            CyclopsSettings.cyclopsCameraLightEnergyConsumption = ConvertToSeconds(CyclopsCameraLightEnergyPerDay);
         }
 
         public static float ConvertToSeconds(float energyPerDay)

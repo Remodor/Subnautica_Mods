@@ -16,11 +16,10 @@ namespace Rm_PowerModifier
         }
 
         [HarmonyPrefix]
-        internal static bool Prefix(SolarPanel __instance)
+        internal static void Prefix(SolarPanel __instance)
         {
 
             powerLevel = __instance.powerSource.power;
-            return true;
         }
         [HarmonyPostfix]
         internal static void Postfix(SolarPanel __instance)

@@ -17,10 +17,9 @@ namespace Rm_PowerModifier
         }
 
         [HarmonyPrefix]
-        internal static bool Prefix(BaseNuclearReactor __instance)
+        internal static void Prefix(BaseNuclearReactor __instance)
         {
             powerLevel = __instance._powerSource.power;
-            return true;
         }
         [HarmonyPostfix]
         internal static void Postfix(BaseNuclearReactor __instance)

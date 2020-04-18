@@ -13,7 +13,7 @@ namespace Rm_VehicleLightsImproved
     internal class SeaMoth_Start_Patch
     {
         [HarmonyPostfix]
-        internal static void Postfix(SeaMoth __instance)
+        static void Postfix(SeaMoth __instance)
         {
             __instance.toggleLights.energyPerSecond = SeaMothSettings.lightEnergyConsumption;
             __instance.toggleLights.SetLightsActive(false);
@@ -24,7 +24,7 @@ namespace Rm_VehicleLightsImproved
     internal class SeaMoth_OnDockedChanged_Patch
     {
         [HarmonyPostfix]
-        internal static void Postfix(SeaMoth __instance, bool docked)
+        static void Postfix(SeaMoth __instance, bool docked)
         {
             if (docked)
             {

@@ -9,10 +9,6 @@ namespace Rm_VehicleLightsImproved
         internal static float lightEnergyConsumption = 0f;
         internal static KeyCode exosuitToggleLightKey = KeyCode.Mouse2;
     }
-    internal static class SeaMothTemplate
-    {
-        internal static SeaMoth SeaMoth = CraftData.GetBuildPrefab(TechType.Seamoth).GetComponent<SeaMoth>();
-    }
     public class ExosuitCustomLight : MonoBehaviour
     {
         public ExosuitCustomLight()
@@ -23,66 +19,18 @@ namespace Rm_VehicleLightsImproved
             lightLeft = lights[0];
             lightRight = lights[1];
 
-            CreateToggleLights();
-            CreateVolumetricLights();
+            SeaMoth seaMothTemplate = SeaMothTemplate.Get();
+            CreateToggleLights(seaMothTemplate);
+            CustomVolumetricLight.CreateVolumetricLight(lightLeft, seaMothTemplate);
+            CustomVolumetricLight.CreateVolumetricLight(lightRight, seaMothTemplate);
         }
-        private void CreateToggleLights()
+        private void CreateToggleLights(SeaMoth seaMothTemplate)
         {
-            var seaMothToggleLights = SeaMothTemplate.SeaMoth.toggleLights;
+            var seaMothToggleLights = seaMothTemplate.toggleLights;
             lightsOnSound = seaMothToggleLights.lightsOnSound;
             lightsOffSound = seaMothToggleLights.lightsOffSound;
             onSound = seaMothToggleLights.onSound;
             offSound = seaMothToggleLights.offSound;
-        }
-        private void CreateVolumetricLights()
-        {
-            CreateVolumetricLight(lightLeft);
-            CreateVolumetricLight(lightRight);
-        }
-        private void CreateVolumetricLight(Light light)
-        {
-            var templateVolumetricLight = SeaMothTemplate.SeaMoth.toggleLights.lightsParent.GetComponentInChildren<VFXVolumetricLight>();
-            var volumetricLight = light.gameObject.AddComponent<VFXVolumetricLight>();
-
-            if (templateVolumetricLight == null)
-            {
-                Console.WriteLine("#7 found error");
-            }
-
-            System.Reflection.FieldInfo[] volumetricLightFields = volumetricLight.GetType().GetFields();
-            foreach (System.Reflection.FieldInfo field in volumetricLightFields)
-            {
-                field.SetValue(volumetricLight, field.GetValue(templateVolumetricLight));
-            }
-
-            var volume = GameObject.Instantiate(templateVolumetricLight.volumGO, light.transform).gameObject;
-            volume.transform.localScale = CalculateLightCone(light);
-            var offset = new Vector3(0, 0.41f, -0.37f);
-            light.transform.localPosition += offset;
-
-            volumetricLight.volumGO = volume;
-            volumetricLight.lightSource = light;
-            volumetricLight.block = null;
-            volumetricLight.angle = (int)light.spotAngle;
-            volumetricLight.intensity = 0.45f;
-
-            volumetricLight.Awake();
-        }
-        public Vector3 CalculateLightCone(Light light)
-        {
-            return CalculateLightCone(light.range, light.spotAngle);
-        }
-        public Vector3 CalculateLightCone(float range, float angle)
-        {
-            var opposite = Mathf.Tan(Mathf.Deg2Rad * angle / 2) * range;
-            var xy = opposite * 2;
-            var cone = new Vector3
-            (
-                xy,
-                xy,
-                range
-            );
-            return cone;
         }
         public bool ToggleLights()
         {
@@ -131,7 +79,7 @@ namespace Rm_VehicleLightsImproved
                 FixLightsActive();
                 UpdateLightEnergy();
                 if (isPilotMode
-                    && Input.GetKeyDown(ExosuitSettings.exosuitToggleLightKey)
+                    && Input.GetKeyUp(ExosuitSettings.exosuitToggleLightKey)
                     && energyInterface.hasCharge
                     && !Player.main.GetPDA().isInUse
                     && global::Utils.GetLocalPlayerComp().GetMode() == Player.Mode.LockedPiloting)

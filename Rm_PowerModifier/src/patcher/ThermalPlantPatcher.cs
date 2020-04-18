@@ -16,10 +16,9 @@ namespace Rm_PowerModifier
         }
 
         [HarmonyPrefix]
-        internal static bool Prefix(ThermalPlant __instance)
+        internal static void Prefix(ThermalPlant __instance)
         {
             powerLevel = __instance.powerSource.power;
-            return true;
         }
         [HarmonyPostfix]
         internal static void Postfix(ThermalPlant __instance)

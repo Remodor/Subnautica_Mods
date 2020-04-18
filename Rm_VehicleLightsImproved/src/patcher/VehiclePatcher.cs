@@ -9,7 +9,7 @@ namespace Rm_VehicleLightsImproved
     internal class Vehicle_ReplenishOxygen_Patch
     {
         [HarmonyPrefix]
-        internal static bool Prefix(Vehicle __instance)
+        static bool Prefix(Vehicle __instance)
         {
             if (__instance.turnedOn && __instance.replenishesOxygen && __instance.GetPilotingMode() && __instance.CanPilot())
             {

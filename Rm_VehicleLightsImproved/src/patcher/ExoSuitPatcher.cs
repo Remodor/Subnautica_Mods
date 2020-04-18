@@ -9,7 +9,7 @@ namespace Rm_VehicleLightsImproved
     [HarmonyPatch(nameof(Exosuit.Start))]
     internal class Exosuit_Start_Patch
     {
-        internal static void Postfix(Exosuit __instance)
+        static void Postfix(Exosuit __instance)
         {
             var exoToggleLights = __instance.gameObject.AddComponent<ExosuitCustomLight>();
             exoToggleLights.SetLightsActive(false);
@@ -20,7 +20,7 @@ namespace Rm_VehicleLightsImproved
     internal static class Exosuit_OnPilotModeBegin_Patch
     {
         [HarmonyPostfix]
-        private static void Postfix(Exosuit __instance)
+        static void Postfix(Exosuit __instance)
         {
             __instance.GetComponentsInChildren<VFXVolumetricLight>()
                         .ForEach(x => x.DisableVolume());
@@ -32,7 +32,7 @@ namespace Rm_VehicleLightsImproved
     internal static class Exosuit_OnPilotModeEnd_Patch
     {
         [HarmonyPostfix]
-        private static void Postfix(Exosuit __instance)
+        static void Postfix(Exosuit __instance)
         {
             __instance.GetComponentsInChildren<VFXVolumetricLight>()
                         .ForEach(x => x.RestoreVolume());
@@ -44,7 +44,7 @@ namespace Rm_VehicleLightsImproved
     internal class Exosuit_OnDockedChanged_Patch
     {
         [HarmonyPostfix]
-        internal static void Postfix(Exosuit __instance, bool docked)
+        static void Postfix(Exosuit __instance, bool docked)
         {
             if (docked)
             {
