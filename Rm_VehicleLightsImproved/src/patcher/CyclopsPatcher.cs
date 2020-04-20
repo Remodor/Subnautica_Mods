@@ -1,7 +1,9 @@
-﻿using FMOD.Studio;
-using Harmony;
+﻿using Harmony;
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Reflection.Emit;
+using System.Reflection;
 
 namespace Rm_VehicleLightsImproved
 {
@@ -12,10 +14,14 @@ namespace Rm_VehicleLightsImproved
         internal static float externalLightEnergyConsumption = 0f;
         internal static float engineIdlingEnergyConsumption = 0f;
         internal static float cyclopsCameraLightEnergyConsumption = 0f;
+        private static float cyclopsSilentRunningEnergyConsumption = 1f;
+
         internal static float cameraRotationDamper = 3f;
         internal static bool alternativeCameraControls = true;
         internal static float cyclopsCameraLightIntensity = 1f;
         internal static float cyclopsCameraLightRange = 55f;
+
+        internal static float CyclopsSilentRunningEnergyConsumption { get => cyclopsSilentRunningEnergyConsumption; set => cyclopsSilentRunningEnergyConsumption = value * 2; }
     }
     [HarmonyPatch(typeof(CyclopsLightingPanel))]
     [HarmonyPatch(nameof(CyclopsLightingPanel.Start))]
@@ -49,9 +55,31 @@ namespace Rm_VehicleLightsImproved
             if (__instance.prevPowerRelayState && __instance.floodlightsOn)
             {
                 float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.externalLightEnergyConsumption;
-                float consumedEnergy;
-                __instance.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out consumedEnergy);
+                __instance.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out _);
             }
+        }
+    }
+    [HarmonyPatch(typeof(CyclopsLightingPanel))]
+    [HarmonyPatch(nameof(CyclopsLightingPanel.ToggleFloodlights))]
+    internal class CyclopsLightingPanel_ToggleFloodlights_Patch
+    {
+        //Fixed toggle lights bug with multiple Cyclops.
+        static bool Prefix(CyclopsLightingPanel __instance)
+        {
+            if (Player.main.currentSub != __instance.cyclopsRoot)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+    [HarmonyPatch(typeof(SubRoot))]
+    [HarmonyPatch(nameof(SubRoot.Start))]
+    internal class SubRoot_Start_Patch
+    {
+        static void Postfix(SubRoot __instance)
+        {
+            __instance.silentRunningPowerCost = 0;
         }
     }
     [HarmonyPatch(typeof(SubRoot))]
@@ -60,6 +88,11 @@ namespace Rm_VehicleLightsImproved
     {
         static void Prefix(SubRoot __instance, out bool __state)
         {
+            if (Input.GetKeyUp(KeyCode.KeypadPlus))
+            {
+                __instance.floodFraction += 0.3f;
+            }
+            Console.WriteLine("#F __instance.floodFraction: {0}, ", __instance.floodFraction);
             __state = __instance.silentRunning;
             if (__instance.powerRelay.GetPowerStatus() == PowerSystem.Status.Emergency)
             {
@@ -71,14 +104,12 @@ namespace Rm_VehicleLightsImproved
             if (__instance.lightingState == 0)
             {
                 float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.internalLightEnergyConsumption;
-                float consumedEnergy;
-                __instance.powerRelay.ConsumeEnergy(energyCost, out consumedEnergy);
+                __instance.powerRelay.ConsumeEnergy(energyCost, out _);
             }
             else if (__instance.lightingState == 1)
             {
                 float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.emergencyLightEnergyConsumption;
-                float consumedEnergy;
-                __instance.powerRelay.ConsumeEnergy(energyCost, out consumedEnergy);
+                __instance.powerRelay.ConsumeEnergy(energyCost, out _);
             }
             __instance.silentRunning = __state;
         }
@@ -89,18 +120,16 @@ namespace Rm_VehicleLightsImproved
     {
         static void Postfix(SubControl __instance)
         {
-
             if (__instance.cyclopsMotorMode.engineOn && !__instance.appliedThrottle)
             {
                 float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.engineIdlingEnergyConsumption;
-                float consumedEnergy;
-                __instance.powerRelay.ConsumeEnergy(energyCost, out consumedEnergy);
-                if (consumedEnergy == 0 && energyCost != 0)
+                if (!__instance.powerRelay.ConsumeEnergy(energyCost, out _))
                 {
                     __instance.sub.voiceNotificationManager.PlayVoiceNotification(__instance.sub.enginePowerDownNotification, true, false);
                     __instance.sub.BroadcastMessage("InvokeChangeEngineState", false, SendMessageOptions.RequireReceiver);
                 }
             }
+
         }
     }
     [HarmonyPatch(typeof(CyclopsEngineChangeState))]
@@ -262,9 +291,7 @@ namespace Rm_VehicleLightsImproved
             {
                 var factor = __instance.cameraLight.intensity / CyclopsSettings.cyclopsCameraLightIntensity;
                 float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.cyclopsCameraLightEnergyConsumption * factor;
-                float consumedEnergy;
-                __instance.lightingPanel.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out consumedEnergy);
-                if (consumedEnergy == 0 && energyCost != 0)
+                if (!__instance.lightingPanel.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out _))
                 {
                     __instance.cameraLight.enabled = false;
                     CyclopsExternalCams.lightState = 0;
@@ -272,4 +299,86 @@ namespace Rm_VehicleLightsImproved
             }
         }
     }
- }
+    [HarmonyPatch(typeof(CyclopsSilentRunningAbilityButton))]
+    [HarmonyPatch(nameof(CyclopsSilentRunningAbilityButton.Update))]
+    internal class CyclopsSilentRunningAbilityButton_Update_Patch
+    {
+        static void Postfix(CyclopsSilentRunningAbilityButton __instance)
+        {
+            if (__instance.active)
+            {
+                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.CyclopsSilentRunningEnergyConsumption * __instance.subRoot.noiseManager.GetNoisePercent();
+                if (!__instance.subRoot.powerRelay.ConsumeEnergy(energyCost, out _))
+                {
+                    __instance.TurnOffSilentRunning();
+                }
+            }
+        }
+    }
+    [HarmonyPatch(typeof(CyclopsSilentRunningAbilityButton))]
+    [HarmonyPatch(nameof(CyclopsSilentRunningAbilityButton.TurnOnSilentRunning))]
+    internal class CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var methodInvokeRepeating = typeof(MonoBehaviour).GetMethod(nameof(MonoBehaviour.InvokeRepeating), new Type[] {typeof(string), typeof(float), typeof(float)});
+            int state = 0;
+            foreach (CodeInstruction instruction in instructions)
+            {
+                switch (state)
+                {
+                    case 0:
+                        if (instruction.operand as String == "SilentRunningIteration")
+                        {
+                            state++;
+                            continue;
+                        }
+                        break;
+                    case 1:
+                        if (instruction.opcode == OpCodes.Call && instruction.operand as MethodInfo == methodInvokeRepeating)
+                        {
+                            state++;
+                        }
+                        continue;
+                    case 2:
+                        state++;
+                        continue;
+                }
+                yield return instruction;
+            }
+        }
+    }
+    [HarmonyPatch(typeof(CyclopsSilentRunningAbilityButton))]
+    [HarmonyPatch(nameof(CyclopsSilentRunningAbilityButton.TurnOffSilentRunning))]
+    internal class CyclopsSilentRunningAbilityButton_TurnOffSilentRunning_Patch
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var methodCancelInvoke = typeof(MonoBehaviour).GetMethod(nameof(MonoBehaviour.CancelInvoke), new Type[] {typeof(string)});
+            int state = 0;
+            foreach (CodeInstruction instruction in instructions)
+            {
+                switch (state)
+                {
+                    case 0:
+                        if (instruction.operand as String == "SilentRunningIteration")
+                        {
+                            state++;
+                            continue;
+                        }
+                        break;
+                    case 1:
+                        if (instruction.opcode == OpCodes.Call && instruction.operand as MethodInfo == methodCancelInvoke)
+                        {
+                            state++;
+                        }
+                        continue;
+                    case 2:
+                        state++;
+                        continue;
+                }
+                yield return instruction;
+            }
+        }
+    }
+}

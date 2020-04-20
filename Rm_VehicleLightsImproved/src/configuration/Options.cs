@@ -59,6 +59,10 @@ namespace Rm_VehicleLightsImproved
                     Config<LightsConfig>.Get().CyclopsCameraLightEnergyPerDay = e.Value;
                     Changed();
                     return;
+                case "CyclopsSilentRunningEnergyPerDay":
+                    Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay = e.Value;
+                    Changed();
+                    return;
             }
         }
         public void Options_KeybindChanged(object sender, KeybindChangedEventArgs e)
@@ -101,12 +105,26 @@ namespace Rm_VehicleLightsImproved
                 slider.AddComponent<StepSlider_1>();
                 return;
             }
+            if (e.Id == "CyclopsSilentRunningEnergyPerDay")
+            {
+                GameObject slider = gameObject.transform.Find("Slider").gameObject;
+                slider.AddComponent<StepSlider_25>();
+                return;
+            }
         }
         private class StepSlider_1 : ModSliderOption.SliderValue
         {
             protected override void UpdateLabel()
             {
                 slider.value = Mathf.Round(slider.value);
+                base.UpdateLabel();
+            }
+        }
+        private class StepSlider_25 : ModSliderOption.SliderValue
+        {
+            protected override void UpdateLabel()
+            {
+                slider.value = Mathf.Round(slider.value / 25.0f) * 25.0f;
                 base.UpdateLabel();
             }
         }
@@ -117,8 +135,9 @@ namespace Rm_VehicleLightsImproved
             AddSliderOption("CyclopsInternalLightEnergyPerDay", "EPD: Cyclops Internal", 0f, 200f, Config<LightsConfig>.Get().CyclopsInternalLightEnergyPerDay, 25f);
             AddSliderOption("CyclopsEmergencyLightEnergyPerDay", "EPD: Cyclops Emergency", 0f, 200f, Config<LightsConfig>.Get().CyclopsEmergencyLightEnergyPerDay, 10f);
             AddSliderOption("CyclopsExternalLightEnergyPerDay", "EPD: Cyclops External", 0f, 200f, Config<LightsConfig>.Get().CyclopsExternalLightEnergyPerDay, 100f);
-            AddSliderOption("CyclopsIdlingEnergyPerDay", "EPD: Cyclops Engine Idle", 0f, 200f, Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay, 10f);
             AddSliderOption("CyclopsCameraLightEnergyPerDay", "EPD: Cyclops Camera Light", 0f, 200f, Config<LightsConfig>.Get().CyclopsCameraLightEnergyPerDay, 75f);
+            AddSliderOption("CyclopsIdlingEnergyPerDay", "EPD: Cyclops Engine Idle", 0f, 200f, Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay, 10f);
+            AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Running", 0f, 4800f, Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
 
             AddToggleOption("CyclopsAlternativeCameraControls", "Cyclops Alternative Camera Controls", Config<LightsConfig>.Get().CyclopsAlternativeCameraControls);
             AddSliderOption("CyclopsCameraLightRange", "Cyclops Camera L.Range", 0f, 200f, Config<LightsConfig>.Get().CyclopsCameraLightRange, 55f);
