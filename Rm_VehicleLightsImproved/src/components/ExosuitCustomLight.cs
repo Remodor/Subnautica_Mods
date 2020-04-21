@@ -88,6 +88,10 @@ namespace Rm_VehicleLightsImproved
                 }
             }
         }
+        public bool IsLightActive()
+        {
+            return lightIsActive;
+        }
         private readonly Light lightLeft;
         private readonly Light lightRight;
         public bool isPilotMode = false;
@@ -99,5 +103,4 @@ namespace Rm_VehicleLightsImproved
         private FMODAsset offSound;
         private readonly EnergyInterface energyInterface;
     }
-
 }

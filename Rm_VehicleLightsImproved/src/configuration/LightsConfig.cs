@@ -19,6 +19,7 @@ namespace Rm_VehicleLightsImproved
         public float CyclopsCameraRotationDamper = 3f;
         public float CyclopsCameraLightRange = 55f;
         public float CyclopsCameraLightIntensity = 1f;
+        public bool CyclopsAutoLightDim = true;
 
         public KeyCode ExosuitToggleLightKey = KeyCode.Mouse2;
 
@@ -32,11 +33,12 @@ namespace Rm_VehicleLightsImproved
             CyclopsSettings.externalLightEnergyConsumption = ConvertToSeconds(CyclopsExternalLightEnergyPerDay);
             CyclopsSettings.engineIdlingEnergyConsumption= ConvertToSeconds(CyclopsIdlingEnergyPerDay);
             CyclopsSettings.cameraRotationDamper = Mathf.Max(0.1f, CyclopsCameraRotationDamper);
+            CyclopsSettings.cyclopsAutoLightDim = CyclopsAutoLightDim;
             CyclopsSettings.alternativeCameraControls = CyclopsAlternativeCameraControls;
             CyclopsSettings.cyclopsCameraLightRange = CyclopsCameraLightRange;
             CyclopsSettings.cyclopsCameraLightIntensity = Mathf.Max(0.1f, CyclopsCameraLightIntensity);
             CyclopsSettings.cyclopsCameraLightEnergyConsumption = ConvertToSeconds(CyclopsCameraLightEnergyPerDay);
-            CyclopsSettings.CyclopsSilentRunningEnergyConsumption = ConvertToSeconds(CyclopsSilentRunningEnergyPerDay);
+            CyclopsSettings.cyclopsSilentRunningEnergyConsumption = ConvertToSeconds(CyclopsSilentRunningEnergyPerDay);
         }
 
         public static float ConvertToSeconds(float energyPerDay)

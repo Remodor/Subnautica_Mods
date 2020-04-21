@@ -44,7 +44,7 @@ namespace Rm_VehicleLightsImproved
                     Changed();
                     return;
                 case "CyclopsCameraRotationDamper":
-                    Config<LightsConfig>.Get().CyclopsCameraRotationDamper = e.Value;
+                    Config<LightsConfig>.Get().CyclopsCameraRotationDamper = (float)Math.Round(e.Value, 2);
                     Changed();
                     return;
                 case "CyclopsCameraLightRange":
@@ -78,6 +78,11 @@ namespace Rm_VehicleLightsImproved
             if (e.Id == "CyclopsAlternativeCameraControls")
             {
                 Config<LightsConfig>.Get().CyclopsAlternativeCameraControls = e.Value;
+                Changed();
+            }
+            if (e.Id == "CyclopsAutoLightDim")
+            {
+                Config<LightsConfig>.Get().CyclopsAutoLightDim = e.Value;
                 Changed();
             }
         }
@@ -137,12 +142,13 @@ namespace Rm_VehicleLightsImproved
             AddSliderOption("CyclopsExternalLightEnergyPerDay", "EPD: Cyclops External", 0f, 200f, Config<LightsConfig>.Get().CyclopsExternalLightEnergyPerDay, 100f);
             AddSliderOption("CyclopsCameraLightEnergyPerDay", "EPD: Cyclops Camera Light", 0f, 200f, Config<LightsConfig>.Get().CyclopsCameraLightEnergyPerDay, 75f);
             AddSliderOption("CyclopsIdlingEnergyPerDay", "EPD: Cyclops Engine Idle", 0f, 200f, Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay, 10f);
-            AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Running", 0f, 4800f, Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
+            AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Run.", 0f, 6000f, Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
 
             AddToggleOption("CyclopsAlternativeCameraControls", "Cyclops Alternative Camera Controls", Config<LightsConfig>.Get().CyclopsAlternativeCameraControls);
             AddSliderOption("CyclopsCameraLightRange", "Cyclops Camera L.Range", 0f, 200f, Config<LightsConfig>.Get().CyclopsCameraLightRange, 55f);
             AddSliderOption("CyclopsCameraLightIntensity", "Cyclops Camera L.Intensity", 0.1f, 2.0f, Config<LightsConfig>.Get().CyclopsCameraLightIntensity, 1.0f, "{0:F2}");
             AddSliderOption("CyclopsCameraRotationDamper", "Cyclops Camera Damper", 0.1f, 5f, Config<LightsConfig>.Get().CyclopsCameraRotationDamper, 3f, "{0:F2}");
+            AddToggleOption("CyclopsAutoLightDim", "Cyclops Light Dim On Exit", Config<LightsConfig>.Get().CyclopsAutoLightDim);
 
             AddKeybindOption("ExosuitToggleLightKey", "Exosuit light toggle", GameInput.GetPrimaryDevice(), Config<LightsConfig>.Get().ExosuitToggleLightKey);
             constructed = true;
