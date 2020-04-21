@@ -16,7 +16,11 @@ namespace Rm_VehicleLightsImproved
         internal static ExosuitCustomLight currentExosuitCustomLight;
         static void Postfix(Exosuit __instance)
         {
-            var exoToggleLights = __instance.gameObject.AddComponent<ExosuitCustomLight>();
+            var exoToggleLights = __instance.GetComponent<ExosuitCustomLight>();
+            if (exoToggleLights == null)
+            {
+                exoToggleLights = __instance.gameObject.AddComponent<ExosuitCustomLight>();
+            }
             exoToggleLights.SetLightsActive(false);
             currentExosuitCustomLight = exoToggleLights;
             Exosuit_UpdateUIText_Patch.BuildToggleLightText();
@@ -29,8 +33,7 @@ namespace Rm_VehicleLightsImproved
         [HarmonyPostfix]
         static void Postfix(Exosuit __instance)
         {
-            __instance.GetComponentsInChildren<VFXVolumetricLight>()
-                        .ForEach(x => x.DisableVolume());
+            __instance.GetComponentsInChildren<VFXVolumetricLight>().ForEach(x => x.DisableVolume());
             var customLights = __instance.GetComponent<ExosuitCustomLight>();
             customLights.isPilotMode = true;
             Exosuit_Start_Patch.currentExosuitCustomLight = customLights;
@@ -44,8 +47,7 @@ namespace Rm_VehicleLightsImproved
         [HarmonyPostfix]
         static void Postfix(Exosuit __instance)
         {
-            __instance.GetComponentsInChildren<VFXVolumetricLight>()
-                        .ForEach(x => x.RestoreVolume());
+            __instance.GetComponentsInChildren<VFXVolumetricLight>().ForEach(x => x.RestoreVolume());
             var customLights = __instance.GetComponent<ExosuitCustomLight>();
             customLights.isPilotMode = false;
         }

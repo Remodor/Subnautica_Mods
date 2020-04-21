@@ -8,11 +8,14 @@ namespace Rm_VehicleLightsImproved
         public static void CreateVolumetricLight(Light light, SeaMoth seaMothTemplate)
         {
             var templateVolumetricLight = seaMothTemplate.toggleLights.lightsParent.GetComponentInChildren<VFXVolumetricLight>();
-            var volumetricLight = light.gameObject.AddComponent<VFXVolumetricLight>();
-
             if (templateVolumetricLight == null)
             {
-                Console.WriteLine("#7 found error");
+                Console.WriteLine("#ERROR: templateVolumetricLight == null");
+            }
+            var volumetricLight = light.gameObject.GetComponent<VFXVolumetricLight>();
+            if (volumetricLight == null)
+            {
+                volumetricLight = light.gameObject.AddComponent<VFXVolumetricLight>();
             }
 
             System.Reflection.FieldInfo[] volumetricLightFields = volumetricLight.GetType().GetFields();

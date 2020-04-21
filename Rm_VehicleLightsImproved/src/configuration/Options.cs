@@ -63,6 +63,10 @@ namespace Rm_VehicleLightsImproved
                     Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay = e.Value;
                     Changed();
                     return;
+                case "MapRoomCameraLightEnergyPerDay":
+                    Config<LightsConfig>.Get().MapRoomCameraLightEnergyPerDay = e.Value;
+                    Changed();
+                    return;
             }
         }
         public void Options_KeybindChanged(object sender, KeybindChangedEventArgs e)
@@ -85,6 +89,11 @@ namespace Rm_VehicleLightsImproved
                 Config<LightsConfig>.Get().CyclopsAutoLightDim = e.Value;
                 Changed();
             }
+            if (e.Id == "CyclopsSwapLightButtons")
+            {
+                Config<LightsConfig>.Get().CyclopsSwapLightButtons = e.Value;
+                Changed();
+            }
         }
         private void Changed()
         {
@@ -104,6 +113,7 @@ namespace Rm_VehicleLightsImproved
                 || e.Id == "CyclopsEmergencyLightEnergyPerDay"
                 || e.Id == "CyclopsIdlingEnergyPerDay"
                 || e.Id == "CyclopsCameraLightRange"
+                || e.Id == "MapRoomCameraLightEnergyPerDay"
                 || e.Id == "CyclopsCameraLightEnergyPerDay")
             {
                 GameObject slider = gameObject.transform.Find("Slider").gameObject;
@@ -137,6 +147,8 @@ namespace Rm_VehicleLightsImproved
         {
             AddSliderOption("SeaMothLightEnergyPerDay", "EnergyPerDay: Seamoth", 0f, 200f, Config<LightsConfig>.Get().SeaMothLightEnergyPerDay, 50f);
             AddSliderOption("ExosuitLightEnergyPerDay", "EPD: Prawn Suit", 0f, 200f, Config<LightsConfig>.Get().ExosuitLightEnergyPerDay, 50f);
+            AddSliderOption("MapRoomCameraLightEnergyPerDay", "EPD: Scanner Camera Light", 0f, 200f, Config<LightsConfig>.Get().MapRoomCameraLightEnergyPerDay, 50f);
+
             AddSliderOption("CyclopsInternalLightEnergyPerDay", "EPD: Cyclops Internal", 0f, 200f, Config<LightsConfig>.Get().CyclopsInternalLightEnergyPerDay, 25f);
             AddSliderOption("CyclopsEmergencyLightEnergyPerDay", "EPD: Cyclops Emergency", 0f, 200f, Config<LightsConfig>.Get().CyclopsEmergencyLightEnergyPerDay, 10f);
             AddSliderOption("CyclopsExternalLightEnergyPerDay", "EPD: Cyclops External", 0f, 200f, Config<LightsConfig>.Get().CyclopsExternalLightEnergyPerDay, 100f);
@@ -149,6 +161,8 @@ namespace Rm_VehicleLightsImproved
             AddSliderOption("CyclopsCameraLightIntensity", "Cyclops Camera L.Intensity", 0.1f, 2.0f, Config<LightsConfig>.Get().CyclopsCameraLightIntensity, 1.0f, "{0:F2}");
             AddSliderOption("CyclopsCameraRotationDamper", "Cyclops Camera Damper", 0.1f, 5f, Config<LightsConfig>.Get().CyclopsCameraRotationDamper, 3f, "{0:F2}");
             AddToggleOption("CyclopsAutoLightDim", "Cyclops Light Dim On Exit", Config<LightsConfig>.Get().CyclopsAutoLightDim);
+            AddToggleOption("CyclopsSwapLightButtons", "Cyclops Swap Light Buttons", Config<LightsConfig>.Get().CyclopsSwapLightButtons);
+
 
             AddKeybindOption("ExosuitToggleLightKey", "Exosuit light toggle", GameInput.GetPrimaryDevice(), Config<LightsConfig>.Get().ExosuitToggleLightKey);
             constructed = true;

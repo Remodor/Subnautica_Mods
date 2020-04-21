@@ -7,6 +7,7 @@ namespace Rm_VehicleLightsImproved
     {
         public float SeaMothLightEnergyPerDay = 50f;
         public float ExosuitLightEnergyPerDay = 50f;
+        public float MapRoomCameraLightEnergyPerDay = 25f;
         public float CyclopsInternalLightEnergyPerDay = 25f;
         public float CyclopsEmergencyLightEnergyPerDay = 10f;
         public float CyclopsExternalLightEnergyPerDay = 100f;
@@ -20,6 +21,7 @@ namespace Rm_VehicleLightsImproved
         public float CyclopsCameraLightRange = 55f;
         public float CyclopsCameraLightIntensity = 1f;
         public bool CyclopsAutoLightDim = true;
+        public bool CyclopsSwapLightButtons = true;
 
         public KeyCode ExosuitToggleLightKey = KeyCode.Mouse2;
 
@@ -39,6 +41,9 @@ namespace Rm_VehicleLightsImproved
             CyclopsSettings.cyclopsCameraLightIntensity = Mathf.Max(0.1f, CyclopsCameraLightIntensity);
             CyclopsSettings.cyclopsCameraLightEnergyConsumption = ConvertToSeconds(CyclopsCameraLightEnergyPerDay);
             CyclopsSettings.cyclopsSilentRunningEnergyConsumption = ConvertToSeconds(CyclopsSilentRunningEnergyPerDay);
+            CyclopsSettings.cyclopsSwapLightButtons = CyclopsSwapLightButtons;
+            MapRoomSettings.mapRoomCameraLightEnergyConsumption = ConvertToSeconds(MapRoomCameraLightEnergyPerDay);
+
         }
 
         public static float ConvertToSeconds(float energyPerDay)

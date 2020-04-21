@@ -20,6 +20,8 @@ namespace Rm_VehicleLightsImproved
 
         internal static bool cyclopsAutoLightDim = true;
         internal static bool alternativeCameraControls = true;
+        internal static bool cyclopsSwapLightButtons = true;
+        
         internal static float cyclopsCameraLightIntensity = 1f;
         internal static float cyclopsCameraLightRange = 55f;
     }
@@ -66,7 +68,10 @@ namespace Rm_VehicleLightsImproved
         //Swaps the lighting buttons to make more sense.
         static void Postfix(CyclopsLightingPanel __instance)
         {
-            __instance.uiPanel.transform.localRotation = new Quaternion(0, -1.0f, 0, 0);
+            if (CyclopsSettings.cyclopsSwapLightButtons)
+            {
+                __instance.uiPanel.transform.localRotation = new Quaternion(0, -1.0f, 0, 0);
+            }
         }
     }
     [HarmonyPatch(typeof(CyclopsLightingPanel))]
@@ -90,7 +95,7 @@ namespace Rm_VehicleLightsImproved
         static void Postfix(SubRoot __instance)
         {
             __instance.silentRunningPowerCost = 0;
-            //__instance.lightControl.fadeDuration = 1.5f;
+            __instance.lightControl.fadeDuration = 1.5f;
         }
     }
     [HarmonyPatch(typeof(SubRoot))]
