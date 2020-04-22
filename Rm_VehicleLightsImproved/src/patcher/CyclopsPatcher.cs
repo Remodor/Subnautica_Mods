@@ -9,21 +9,18 @@ namespace Rm_VehicleLightsImproved
 {
     internal static class CyclopsSettings
     {
-        internal static float internalLightEnergyConsumption = 0f;
-        internal static float emergencyLightEnergyConsumption = 0f;
-        internal static float externalLightEnergyConsumption = 0f;
+        internal static float floodLightEnergyConsumption = 0f;
         internal static float engineIdlingEnergyConsumption = 0f;
-        internal static float cyclopsCameraLightEnergyConsumption = 0f;
-        internal static float cyclopsSilentRunningEnergyConsumption = 1f;
+        internal static float cameraLightEnergyConsumption = 0f;
+        internal static float silentRunningEnergyConsumption = 1f;
 
         internal static float cameraRotationDamper = 3f;
 
-        internal static bool cyclopsAutoLightDim = true;
         internal static bool alternativeCameraControls = true;
-        internal static bool cyclopsSwapLightButtons = true;
+        internal static bool swapLightButtons = true;
         
-        internal static float cyclopsCameraLightIntensity = 1f;
-        internal static float cyclopsCameraLightRange = 55f;
+        internal static float cameraLightIntensity = 1f;
+        internal static float cameraLightRange = 55f;
     }
     [HarmonyPatch(typeof(CyclopsLightingPanel))]
     [HarmonyPatch(nameof(CyclopsLightingPanel.Start))]
@@ -56,7 +53,7 @@ namespace Rm_VehicleLightsImproved
         {
             if (__instance.prevPowerRelayState && __instance.floodlightsOn)
             {
-                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.externalLightEnergyConsumption;
+                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.floodLightEnergyConsumption;
                 __instance.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out _);
             }
         }
@@ -68,7 +65,7 @@ namespace Rm_VehicleLightsImproved
         //Swaps the lighting buttons to make more sense.
         static void Postfix(CyclopsLightingPanel __instance)
         {
-            if (CyclopsSettings.cyclopsSwapLightButtons)
+            if (CyclopsSettings.swapLightButtons)
             {
                 __instance.uiPanel.transform.localRotation = new Quaternion(0, -1.0f, 0, 0);
             }
@@ -88,41 +85,34 @@ namespace Rm_VehicleLightsImproved
             return true;
         }
     }
-    [HarmonyPatch(typeof(SubRoot))]
-    [HarmonyPatch(nameof(SubRoot.Start))]
-    internal class SubRoot_Start_Patch
+    [HarmonyPatch(typeof(CyclopsLightingPanel))]
+    [HarmonyPatch(nameof(CyclopsLightingPanel.TempTurnOffFloodlights))]
+    internal class CyclopsLightingPanel_TempTurnOffFloodlights_Patch
     {
-        static void Postfix(SubRoot __instance)
+        internal static bool previous = false;
+        //Really turns off floodlight to avoid energy consumption
+        static bool Prefix(CyclopsLightingPanel __instance)
         {
-            __instance.silentRunningPowerCost = 0;
-            __instance.lightControl.fadeDuration = 1.5f;
+            previous = __instance.floodlightsOn;
+            if (__instance.floodlightsOn)
+            {
+                __instance.ToggleFloodlights();
+            }
+            return false;
         }
     }
-    [HarmonyPatch(typeof(SubRoot))]
-    [HarmonyPatch(nameof(SubRoot.UpdateLighting))]
-    internal class SubRoot_UpdateLighting_Patch
+    [HarmonyPatch(typeof(CyclopsLightingPanel))]
+    [HarmonyPatch(nameof(CyclopsLightingPanel.RestoreFloodlightsFromTempState))]
+    internal class CyclopsLightingPanel_RestoreFloodlightsFromTempState_Patch
     {
-        static void Prefix(SubRoot __instance, out bool __state)
+        //Restores previous floodlight
+        static bool Prefix(CyclopsLightingPanel __instance)
         {
-            __state = __instance.silentRunning;
-            if ((CyclopsSettings.cyclopsAutoLightDim && Player.main.currentSub != __instance) || __instance.powerRelay.GetPowerStatus() == PowerSystem.Status.Emergency)
+            if (CyclopsLightingPanel_TempTurnOffFloodlights_Patch.previous)
             {
-                __instance.silentRunning = true;
+                __instance.ToggleFloodlights();
             }
-        }
-        static void Postfix(SubRoot __instance, bool __state)
-        {
-            __instance.silentRunning = __state;
-            if (__instance.lightingState == 1)
-            {
-                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.emergencyLightEnergyConsumption;
-                __instance.powerRelay.ConsumeEnergy(energyCost, out _);
-            }
-            else if (__instance.lightingState == 0)
-            {
-                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.internalLightEnergyConsumption;
-                __instance.powerRelay.ConsumeEnergy(energyCost, out _);
-            }
+            return false;
         }
     }
     [HarmonyPatch(typeof(SubControl))]
@@ -310,13 +300,13 @@ namespace Rm_VehicleLightsImproved
                     __instance.cameraLight.enabled = false;
                     return false;
                 case 1:
-                    __instance.cameraLight.range = CyclopsSettings.cyclopsCameraLightRange / 2;
-                    __instance.cameraLight.intensity = CyclopsSettings.cyclopsCameraLightIntensity / 2;
+                    __instance.cameraLight.range = CyclopsSettings.cameraLightRange / 2;
+                    __instance.cameraLight.intensity = CyclopsSettings.cameraLightIntensity / 2;
                     __instance.cameraLight.enabled = true;
                     return false;
                 case 2:
-                    __instance.cameraLight.range = CyclopsSettings.cyclopsCameraLightRange;
-                    __instance.cameraLight.intensity = CyclopsSettings.cyclopsCameraLightIntensity;
+                    __instance.cameraLight.range = CyclopsSettings.cameraLightRange;
+                    __instance.cameraLight.intensity = CyclopsSettings.cameraLightIntensity;
                     __instance.cameraLight.enabled = true;
                     return false;
                 default:
@@ -332,8 +322,8 @@ namespace Rm_VehicleLightsImproved
         {
             if (__instance.cameraLight.isActiveAndEnabled)
             {
-                var factor = __instance.cameraLight.intensity / CyclopsSettings.cyclopsCameraLightIntensity;
-                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.cyclopsCameraLightEnergyConsumption * factor;
+                var factor = __instance.cameraLight.intensity / CyclopsSettings.cameraLightIntensity;
+                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.cameraLightEnergyConsumption * factor;
                 if (!__instance.lightingPanel.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out _))
                 {
                     __instance.cameraLight.enabled = false;
@@ -350,7 +340,7 @@ namespace Rm_VehicleLightsImproved
         {
             if (__instance.active)
             {
-                float rawEnergyCost = Mathf.Max(CyclopsSettings.cyclopsSilentRunningEnergyConsumption * __instance.subRoot.noiseManager.GetNoisePercent(), CyclopsSettings.internalLightEnergyConsumption) * 2;
+                float rawEnergyCost = Mathf.Max(CyclopsSettings.silentRunningEnergyConsumption * __instance.subRoot.noiseManager.GetNoisePercent(), SubRootSettings.defaultLightEnergyConsumption) * 2;
                 float energyCost = DayNightCycle.main.deltaTime * rawEnergyCost;
                 if (!__instance.subRoot.powerRelay.ConsumeEnergy(energyCost, out _))
                 {

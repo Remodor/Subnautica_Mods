@@ -5,7 +5,7 @@ namespace Rm_VehicleLightsImproved
 {
     class CustomVolumetricLight
     {
-        public static void CreateVolumetricLight(Light light, SeaMoth seaMothTemplate)
+        public static void CreateVolumetricLight(Light light,SeaMoth seaMothTemplate, Vector3 offset = new Vector3())
         {
             var templateVolumetricLight = seaMothTemplate.toggleLights.lightsParent.GetComponentInChildren<VFXVolumetricLight>();
             if (templateVolumetricLight == null)
@@ -26,7 +26,6 @@ namespace Rm_VehicleLightsImproved
 
             var volume = GameObject.Instantiate(templateVolumetricLight.volumGO, light.transform).gameObject;
             volume.transform.localScale = CalculateLightCone(light);
-            var offset = new Vector3(0, 0.41f, -0.37f);
             light.transform.localPosition += offset;
 
             volumetricLight.volumGO = volume;

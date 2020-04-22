@@ -5,23 +5,29 @@ namespace Rm_VehicleLightsImproved
 {
     public class LightsConfig
     {
-        public float SeaMothLightEnergyPerDay = 50f;
-        public float ExosuitLightEnergyPerDay = 50f;
-        public float MapRoomCameraLightEnergyPerDay = 25f;
-        public float CyclopsInternalLightEnergyPerDay = 25f;
-        public float CyclopsEmergencyLightEnergyPerDay = 10f;
-        public float CyclopsExternalLightEnergyPerDay = 100f;
-        public float CyclopsCameraLightEnergyPerDay = 75f;
+        public float SeaMothLightEnergyPerDay = 0f;
+        public float ExosuitLightEnergyPerDay = 0f;
 
-        public float CyclopsIdlingEnergyPerDay = 10f;
+        public float BaseDefaultLightEnergyPerDay = 0f;
+        public float BaseEmergencyLightEnergyPerDay = 0f;
+
+        public float CyclopsFloodLightEnergyPerDay = 0f;
+        public float CyclopsCameraLightEnergyPerDay = 0f;
+        public float CyclopsIdlingEnergyPerDay = 0f;
         public float CyclopsSilentRunningEnergyPerDay = 1200f;
 
+        public float MapRoomCameraLightEnergyPerDay = 0f;
+
+
+
+        public bool CyclopsSwapLightButtons = true;
         public bool CyclopsAlternativeCameraControls = true;
+
         public float CyclopsCameraRotationDamper = 3f;
         public float CyclopsCameraLightRange = 55f;
         public float CyclopsCameraLightIntensity = 1f;
-        public bool CyclopsAutoLightDim = true;
-        public bool CyclopsSwapLightButtons = true;
+
+        public bool BaseAutoLightDim = true;
 
         public KeyCode ExosuitToggleLightKey = KeyCode.Mouse2;
 
@@ -30,22 +36,20 @@ namespace Rm_VehicleLightsImproved
             SeaMothSettings.lightEnergyConsumption = ConvertToSeconds(SeaMothLightEnergyPerDay);
             ExosuitSettings.lightEnergyConsumption = ConvertToSeconds(ExosuitLightEnergyPerDay);
             ExosuitSettings.exosuitToggleLightKey = ExosuitToggleLightKey;
-            CyclopsSettings.internalLightEnergyConsumption = ConvertToSeconds(CyclopsInternalLightEnergyPerDay);
-            CyclopsSettings.emergencyLightEnergyConsumption = ConvertToSeconds(CyclopsEmergencyLightEnergyPerDay);
-            CyclopsSettings.externalLightEnergyConsumption = ConvertToSeconds(CyclopsExternalLightEnergyPerDay);
+            SubRootSettings.defaultLightEnergyConsumption = ConvertToSeconds(BaseDefaultLightEnergyPerDay);
+            SubRootSettings.emergencyLightEnergyConsumption = ConvertToSeconds(BaseEmergencyLightEnergyPerDay);
+            CyclopsSettings.floodLightEnergyConsumption = ConvertToSeconds(CyclopsFloodLightEnergyPerDay);
             CyclopsSettings.engineIdlingEnergyConsumption= ConvertToSeconds(CyclopsIdlingEnergyPerDay);
             CyclopsSettings.cameraRotationDamper = Mathf.Max(0.1f, CyclopsCameraRotationDamper);
-            CyclopsSettings.cyclopsAutoLightDim = CyclopsAutoLightDim;
+            SubRootSettings.autoLightDim = BaseAutoLightDim;
             CyclopsSettings.alternativeCameraControls = CyclopsAlternativeCameraControls;
-            CyclopsSettings.cyclopsCameraLightRange = CyclopsCameraLightRange;
-            CyclopsSettings.cyclopsCameraLightIntensity = Mathf.Max(0.1f, CyclopsCameraLightIntensity);
-            CyclopsSettings.cyclopsCameraLightEnergyConsumption = ConvertToSeconds(CyclopsCameraLightEnergyPerDay);
-            CyclopsSettings.cyclopsSilentRunningEnergyConsumption = ConvertToSeconds(CyclopsSilentRunningEnergyPerDay);
-            CyclopsSettings.cyclopsSwapLightButtons = CyclopsSwapLightButtons;
+            CyclopsSettings.cameraLightRange = CyclopsCameraLightRange;
+            CyclopsSettings.cameraLightIntensity = Mathf.Max(0.1f, CyclopsCameraLightIntensity);
+            CyclopsSettings.cameraLightEnergyConsumption = ConvertToSeconds(CyclopsCameraLightEnergyPerDay);
+            CyclopsSettings.silentRunningEnergyConsumption = ConvertToSeconds(CyclopsSilentRunningEnergyPerDay);
+            CyclopsSettings.swapLightButtons = CyclopsSwapLightButtons;
             MapRoomSettings.mapRoomCameraLightEnergyConsumption = ConvertToSeconds(MapRoomCameraLightEnergyPerDay);
-
         }
-
         public static float ConvertToSeconds(float energyPerDay)
         {
             return energyPerDay / 1200f;

@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\patcher\MapRoomCameraPatcher.cs" />
+    <Compile Include="src\patcher\SubRootPatcher.cs" />
     <Compile Include="src\utils\CustomVolumetricLight.cs" />
     <Compile Include="src\configuration\Config.cs" />
     <Compile Include="src\configuration\LightsConfig.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="src\patcher\CyclopsPatcher.cs" />
     <Compile Include="src\patcher\ToggleLightsPatcher.cs" />
     <Compile Include="src\patcher\SeaMothPatcher.cs" />
-    <Compile Include="src\patcher\VehiclePatcher.cs" />
     <Compile Include="src\patcher\VFXVolumetricLightPatcher.cs" />
     <Compile Include="src\QPatch.cs" />
     <Compile Include="src\utils\SeaMothTemplate.cs" />

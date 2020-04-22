@@ -21,8 +21,9 @@ namespace Rm_VehicleLightsImproved
 
             SeaMoth seaMothTemplate = SeaMothTemplate.Get();
             CreateToggleLights(seaMothTemplate);
-            CustomVolumetricLight.CreateVolumetricLight(lightLeft, seaMothTemplate);
-            CustomVolumetricLight.CreateVolumetricLight(lightRight, seaMothTemplate);
+            var offset = new Vector3(0, 0.41f, -0.37f);
+            CustomVolumetricLight.CreateVolumetricLight(lightLeft, seaMothTemplate, offset);
+            CustomVolumetricLight.CreateVolumetricLight(lightRight, seaMothTemplate, offset);
         }
         private void CreateToggleLights(SeaMoth seaMothTemplate)
         {
