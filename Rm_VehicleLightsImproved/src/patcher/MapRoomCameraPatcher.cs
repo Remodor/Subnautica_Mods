@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Harmony;
+﻿using Harmony;
 using UnityEngine;
 
 namespace Rm_VehicleLightsImproved
@@ -116,7 +112,10 @@ namespace Rm_VehicleLightsImproved
         static void Postfix(MapRoomCamera __instance)
         {
             var toggleLights = __instance.GetComponent<ToggleLights>();
-            toggleLights.SetLightsActive(false);
+            if (toggleLights != null)
+            {
+                toggleLights.SetLightsActive(false);
+            }
         }
     }
     [HarmonyPatch(typeof(MapRoomCamera))]

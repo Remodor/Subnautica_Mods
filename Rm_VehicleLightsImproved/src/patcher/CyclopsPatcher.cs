@@ -69,6 +69,10 @@ namespace Rm_VehicleLightsImproved
             {
                 __instance.uiPanel.transform.localRotation = new Quaternion(0, -1.0f, 0, 0);
             }
+            else
+            {
+                __instance.uiPanel.transform.localRotation = new Quaternion(0, 0, 0, 0);
+            }
         }
     }
     [HarmonyPatch(typeof(CyclopsLightingPanel))]
@@ -300,13 +304,13 @@ namespace Rm_VehicleLightsImproved
                     __instance.cameraLight.enabled = false;
                     return false;
                 case 1:
-                    __instance.cameraLight.range = CyclopsSettings.cameraLightRange / 2;
-                    __instance.cameraLight.intensity = CyclopsSettings.cameraLightIntensity / 2;
+                    __instance.cameraLight.range = CyclopsSettings.cameraLightRange;
+                    __instance.cameraLight.intensity = CyclopsSettings.cameraLightIntensity;
                     __instance.cameraLight.enabled = true;
                     return false;
                 case 2:
-                    __instance.cameraLight.range = CyclopsSettings.cameraLightRange;
-                    __instance.cameraLight.intensity = CyclopsSettings.cameraLightIntensity;
+                    __instance.cameraLight.range = CyclopsSettings.cameraLightRange * 1.35f;
+                    __instance.cameraLight.intensity = CyclopsSettings.cameraLightIntensity * 1.35f;
                     __instance.cameraLight.enabled = true;
                     return false;
                 default:
@@ -314,19 +318,18 @@ namespace Rm_VehicleLightsImproved
             }
         }
     }
-    [HarmonyPatch(typeof(CyclopsExternalCams))]
-    [HarmonyPatch(nameof(CyclopsExternalCams.LateUpdate))]
-    internal class CyclopsExternalCams_LateUpdate_Patch
+    [HarmonyPatch(typeof(CyclopsExternalCamsButton))]
+    [HarmonyPatch(nameof(CyclopsExternalCamsButton.Update))]
+    internal class CyclopsExternalCamsButton_Update_Patch
     {
-        static void Postfix(CyclopsExternalCams __instance)
+        static void Postfix(CyclopsExternalCamsButton __instance)
         {
-            if (__instance.cameraLight.isActiveAndEnabled)
+            if (__instance.cyclopsExternalCams.cameraLight.isActiveAndEnabled)
             {
-                var factor = __instance.cameraLight.intensity / CyclopsSettings.cameraLightIntensity;
-                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.cameraLightEnergyConsumption * factor;
-                if (!__instance.lightingPanel.cyclopsRoot.powerRelay.ConsumeEnergy(energyCost, out _))
+                float energyCost = DayNightCycle.main.deltaTime * CyclopsSettings.cameraLightEnergyConsumption * CyclopsExternalCams.lightState;
+                if (!__instance.subRoot.powerRelay.ConsumeEnergy(energyCost, out _))
                 {
-                    __instance.cameraLight.enabled = false;
+                    __instance.cyclopsExternalCams.cameraLight.enabled = false;
                     CyclopsExternalCams.lightState = 0;
                 }
             }
