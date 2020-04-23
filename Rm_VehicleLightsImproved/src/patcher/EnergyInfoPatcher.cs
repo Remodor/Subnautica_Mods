@@ -14,42 +14,42 @@ namespace Rm_VehicleLightsImproved
         internal static float timeStamp;
     }
 
-    //[HarmonyPatch(typeof(PowerRelay))]
-    //[HarmonyPatch(nameof(PowerRelay.ModifyPower))]
-    //internal class PowerRelay_AddEnergy_Patch
-    //{
-    //    static void Postfix(PowerRelay __instance, float amount)
-    //    {
-    //        if (Player.main.currentSub.powerRelay == __instance && Player.main.currentMountedVehicle == null)
-    //        {
-    //            if (amount < 0)
-    //            {
-    //                EnergyInfo.energyConsumption += amount;
-    //            }
-    //            else
-    //            {
-    //                EnergyInfo.energyProduction += amount;
-    //            }
-    //        }
-    //    }
-    //}
-    //[HarmonyPatch(typeof(EnergyInterface))]
-    //[HarmonyPatch(nameof(EnergyInterface.ModifyCharge))]
-    //internal class EnergyInterface_ModifyCharge_Patch
-    //{
-    //    static void Postfix(EnergyInterface __instance, float amount)
-    //    {
-    //        if (Player.main.currentMountedVehicle.energyInterface == __instance && Player.main.currentSub.powerRelay == null)
-    //        {
-    //            if (amount < 0)
-    //            {
-    //                EnergyInfo.energyConsumption += amount;
-    //            }
-    //            else
-    //            {
-    //                EnergyInfo.energyProduction += amount;
-    //            }
-    //        }
-    //    }
-    //}
+    [HarmonyPatch(typeof(PowerRelay))]
+    [HarmonyPatch(nameof(PowerRelay.ModifyPower))]
+    internal class PowerRelay_AddEnergy_Patch
+    {
+        static void Postfix(PowerRelay __instance, float amount)
+        {
+            if (Player.main.currentSub.powerRelay == __instance && Player.main.currentMountedVehicle == null)
+            {
+                if (amount < 0)
+                {
+                    EnergyInfo.energyConsumption += amount;
+                }
+                else
+                {
+                    EnergyInfo.energyProduction += amount;
+                }
+            }
+        }
+    }
+    [HarmonyPatch(typeof(EnergyInterface))]
+    [HarmonyPatch(nameof(EnergyInterface.ModifyCharge))]
+    internal class EnergyInterface_ModifyCharge_Patch
+    {
+        static void Postfix(EnergyInterface __instance, float amount)
+        {
+            if (Player.main.currentMountedVehicle.energyInterface == __instance && Player.main.currentSub == null)
+            {
+                if (amount < 0)
+                {
+                    EnergyInfo.energyConsumption += amount;
+                }
+                else
+                {
+                    EnergyInfo.energyProduction += amount;
+                }
+            }
+        }
+    }
 }
