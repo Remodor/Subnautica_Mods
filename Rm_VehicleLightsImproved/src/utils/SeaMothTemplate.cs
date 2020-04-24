@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-namespace Rm_VehicleLightsImproved
+﻿namespace Rm_VehicleLightsImproved
 {
     internal static class SeaMothTemplate
     {

@@ -1,6 +1,4 @@
 ﻿using Harmony;
-using UnityEngine;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -14,7 +12,6 @@ namespace Rm_VehicleLightsImproved
 
         internal static bool autoLightDim = true;
         internal static bool includeBaseLights = true;
-        internal static bool debugDailyEnergyExtrapolation = true;   
     }
     [HarmonyPatch(typeof(SubRoot))]
     [HarmonyPatch(nameof(SubRoot.Start))]

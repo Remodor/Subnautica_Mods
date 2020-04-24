@@ -36,8 +36,8 @@ namespace Rm_VehicleLightsImproved
             foreach (var light in lights)
             {
                 light.gameObject.SetActive(true);
-                light.intensity *= 0.5f;
-                light.range *= 0.5f;
+                light.intensity = 0.8f;
+                light.range = 40f;
                 light.transform.localRotation = new Quaternion(0, -0.075f, 0, 1);
             }
             CustomVolumetricLight.CreateVolumetricLight(lights[0], seaMothTemplate, new Vector3(0.032f, -0.027f, -0.05f));

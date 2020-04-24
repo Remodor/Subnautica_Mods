@@ -99,6 +99,11 @@ namespace Rm_VehicleLightsImproved
                 Config<LightsConfig>.Get().IncludeBaseLights = e.Value;
                 Changed();
             }
+            if (e.Id == "DebugDailyEnergyExtrapolation")
+            {
+                Config<LightsConfig>.Get().DebugDailyEnergyExtrapolation = e.Value;
+                Changed();
+            }
         }
         private void Changed()
         {
@@ -173,6 +178,7 @@ namespace Rm_VehicleLightsImproved
             
             AddToggleOption("BaseAutoLightDim",                 "Cyclops/Base Light Dim On Exit", Config<LightsConfig>.Get().BaseAutoLightDim);
             AddToggleOption("IncludeBaseLights",                "Include Base Lights", Config<LightsConfig>.Get().IncludeBaseLights);
+            AddToggleOption("DebugDailyEnergyExtrapolation",       "Draw Daily Energy Consumption", Config<LightsConfig>.Get().DebugDailyEnergyExtrapolation);
 
             AddKeybindOption("ExosuitToggleLightKey",           "Prawn Suit Light Toggle", GameInput.GetPrimaryDevice(), Config<LightsConfig>.Get().ExosuitToggleLightKey);
 

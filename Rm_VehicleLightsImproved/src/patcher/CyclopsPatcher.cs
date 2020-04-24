@@ -437,7 +437,7 @@ namespace Rm_VehicleLightsImproved
             var offLightText = "Lights Off (" + leftHand + ")";
             var selectCamera = "Select Camera (" + slot1 + "/" + slot2 + "/" + slot3 + ")";
 
-            __instance.stringControls = "\n" + exitText + "\n" + onLightText + " / " + offLightText + "\n" + selectCamera;
+            __instance.stringControls = "\n" + exitText + "\n" + offLightText + " / " + onLightText + "\n" + selectCamera;
             return false;
         }
     }

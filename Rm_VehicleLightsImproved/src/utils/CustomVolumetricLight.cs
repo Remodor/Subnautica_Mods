@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Rm_VehicleLightsImproved
 {
@@ -8,10 +7,6 @@ namespace Rm_VehicleLightsImproved
         public static void CreateVolumetricLight(Light light,SeaMoth seaMothTemplate, Vector3 offset = new Vector3())
         {
             var templateVolumetricLight = seaMothTemplate.toggleLights.lightsParent.GetComponentInChildren<VFXVolumetricLight>();
-            if (templateVolumetricLight == null)
-            {
-                Console.WriteLine("#ERROR: templateVolumetricLight == null");
-            }
             var volumetricLight = light.gameObject.GetComponent<VFXVolumetricLight>();
             if (volumetricLight == null)
             {

@@ -10,8 +10,6 @@ namespace Rm_VehicleLightsImproved
         internal static Text energyDisplayText;
         internal static float energyConsumption;
         internal static float energyProduction;
-        internal static float energyState;
-        internal static float timeStamp;
     }
 
     [HarmonyPatch(typeof(PowerRelay))]

@@ -67,7 +67,7 @@ namespace Rm_VehicleLightsImproved
             {
                 float energyCost = DayNightCycle.main.deltaTime * ExosuitSettings.lightEnergyConsumption;
                 float consumedEnergy = energyInterface.ConsumeEnergy(energyCost);
-                if (consumedEnergy == 0 && energyCost != 0)
+                if (consumedEnergy == 0 && energyCost != 0 && GameModeUtils.RequiresPower())
                 {
                     SetLightsActive(false);
                 }

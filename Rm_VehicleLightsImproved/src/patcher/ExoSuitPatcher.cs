@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using UnityEngine;
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Reflection;
 
 namespace Rm_VehicleLightsImproved
 {
-
     [HarmonyPatch(typeof(Exosuit))]
     [HarmonyPatch(nameof(Exosuit.Start))]
     internal class Exosuit_Start_Patch
@@ -85,7 +83,6 @@ namespace Rm_VehicleLightsImproved
         }
         static void Postfix(Exosuit __instance)
         {
-            Console.WriteLine("#PostfixReached");
             if (Exosuit_Start_Patch.currentExosuitCustomLight.IsLightActive())
             {
                 HandReticle.main.useText1 = "\n" + HandReticle.main.useText1 + toggleLightTextOff;

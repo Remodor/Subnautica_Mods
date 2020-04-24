@@ -30,6 +30,8 @@ namespace Rm_VehicleLightsImproved
         public bool BaseAutoLightDim = true;
         public bool IncludeBaseLights = true;
 
+        public bool DebugDailyEnergyExtrapolation = true;
+
         public KeyCode ExosuitToggleLightKey = KeyCode.Mouse2;
 
         public void ApplyModifier()
@@ -51,6 +53,7 @@ namespace Rm_VehicleLightsImproved
             CyclopsSettings.swapLightButtons = CyclopsSwapLightButtons;
             MapRoomSettings.mapRoomCameraLightEnergyConsumption = ConvertToSeconds(MapRoomCameraLightEnergyPerDay);
             SubRootSettings.includeBaseLights = IncludeBaseLights;
+            SubRootSettings.debugDailyEnergyExtrapolation = DebugDailyEnergyExtrapolation;
         }
         public static float ConvertToSeconds(float energyPerDay)
         {
