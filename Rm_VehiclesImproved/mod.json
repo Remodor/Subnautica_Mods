@@ -1,0 +1,11 @@
+{
+  "Id": "Rm_VehiclesImproved",
+  "DisplayName": "Vehicles Improved",
+  "Author": "Remodor",
+  "Version": "1.0.0",
+  "Requires": [],
+  "AssemblyName": "Rm_VehiclesImproved.dll",
+  "EntryMethod": "Rm_VehiclesImproved.QPatch.Patch",
+  "Config": {},
+  "Enable": true
+}

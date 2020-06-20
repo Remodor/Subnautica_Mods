@@ -35,7 +35,10 @@ namespace Rm_VehicleLightsImproved
             var customLights = __instance.GetComponent<ExosuitCustomLight>();
             customLights.isPilotMode = true;
             Exosuit_Start_Patch.currentExosuitCustomLight = customLights;
-            Exosuit_UpdateUIText_Patch.BuildToggleLightText();
+            if (ExosuitSettings.toggleLightHud)
+            {
+                Exosuit_UpdateUIText_Patch.BuildToggleLightText();
+            }
         }
     }
     [HarmonyPatch(typeof(Exosuit))]
@@ -71,7 +74,7 @@ namespace Rm_VehicleLightsImproved
         private static string toggleLightTextOff;
         internal static void BuildToggleLightText()
         {
-            var keyText = uGUI.GetDisplayTextForBinding(GameInput.GetKeyCodeAsInputName(ExosuitSettings.exosuitToggleLightKey));
+            var keyText = uGUI.GetDisplayTextForBinding(GameInput.GetKeyCodeAsInputName(ExosuitSettings.toggleLightKey));
             StringBuilder sb = new StringBuilder();
             sb.Append("Lights Off ");
             sb.AppendFormat("(<color=#ADF8FFFF>{0}</color>)", keyText);
@@ -83,13 +86,16 @@ namespace Rm_VehicleLightsImproved
         }
         static void Postfix(Exosuit __instance)
         {
-            if (Exosuit_Start_Patch.currentExosuitCustomLight.IsLightActive())
+            if (ExosuitSettings.toggleLightHud)
             {
-                HandReticle.main.useText1 = "\n" + HandReticle.main.useText1 + toggleLightTextOff;
-            } 
-            else
-            {
-                HandReticle.main.useText1 = "\n" + HandReticle.main.useText1 + toggleLightTextOn;
+                if (Exosuit_Start_Patch.currentExosuitCustomLight.IsLightActive())
+                {
+                    HandReticle.main.useText1 = "\n" + HandReticle.main.useText1 + toggleLightTextOff;
+                }
+                else
+                {
+                    HandReticle.main.useText1 = "\n" + HandReticle.main.useText1 + toggleLightTextOn;
+                }
             }
         }
         // Removes the annoying "Exit" overlay.

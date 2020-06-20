@@ -39,14 +39,6 @@ namespace Rm_VehicleLightsImproved
                     Config<LightsConfig>.Get().BaseEmergencyLightEnergyPerDay = e.Value;
                     Changed();
                     return;
-                case "CyclopsIdlingEnergyPerDay":
-                    Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay = e.Value;
-                    Changed();
-                    return;
-                case "CyclopsCameraRotationDamper":
-                    Config<LightsConfig>.Get().CyclopsCameraRotationDamper = (float)Math.Round(e.Value, 2);
-                    Changed();
-                    return;
                 case "CyclopsCameraLightRange":
                     Config<LightsConfig>.Get().CyclopsCameraLightRange = e.Value;
                     Changed();
@@ -59,12 +51,12 @@ namespace Rm_VehicleLightsImproved
                     Config<LightsConfig>.Get().CyclopsCameraLightEnergyPerDay = e.Value;
                     Changed();
                     return;
-                case "CyclopsSilentRunningEnergyPerDay":
-                    Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay = e.Value;
-                    Changed();
-                    return;
                 case "MapRoomCameraLightEnergyPerDay":
                     Config<LightsConfig>.Get().MapRoomCameraLightEnergyPerDay = e.Value;
+                    Changed();
+                    return;
+                case "BaseLightFadeDuration":
+                    Config<LightsConfig>.Get().BaseLightFadeDuration = e.Value;
                     Changed();
                     return;
             }
@@ -79,11 +71,6 @@ namespace Rm_VehicleLightsImproved
         }
         public void Options_ToggleChanged(object sender, ToggleChangedEventArgs e)
         {
-            if (e.Id == "CyclopsAlternativeCameraControls")
-            {
-                Config<LightsConfig>.Get().CyclopsAlternativeCameraControls = e.Value;
-                Changed();
-            }
             if (e.Id == "BaseAutoLightDim")
             {
                 Config<LightsConfig>.Get().BaseAutoLightDim = e.Value;
@@ -97,6 +84,11 @@ namespace Rm_VehicleLightsImproved
             if (e.Id == "IncludeBaseLights")
             {
                 Config<LightsConfig>.Get().IncludeBaseLights = e.Value;
+                Changed();
+            }
+            if (e.Id == "ExosuitToggleLightHud")
+            {
+                Config<LightsConfig>.Get().ExosuitToggleLightHud = e.Value;
                 Changed();
             }
         }
@@ -116,7 +108,6 @@ namespace Rm_VehicleLightsImproved
             if (e.Id == "SeaMothLightEnergyPerDay" || e.Id == "ExosuitLightEnergyPerDay"
                 || e.Id == "BaseDefaultLightEnergyPerDay" || e.Id == "CyclopsFloodLightEnergyPerDay"
                 || e.Id == "BaseEmergencyLightEnergyPerDay"
-                || e.Id == "CyclopsIdlingEnergyPerDay"
                 || e.Id == "CyclopsCameraLightRange"
                 || e.Id == "MapRoomCameraLightEnergyPerDay"
                 || e.Id == "CyclopsCameraLightEnergyPerDay")
@@ -125,11 +116,19 @@ namespace Rm_VehicleLightsImproved
                 slider.AddComponent<StepSlider_1>();
                 return;
             }
-            if (e.Id == "CyclopsSilentRunningEnergyPerDay")
+            if (e.Id == "BaseLightFadeDuration")
             {
                 GameObject slider = gameObject.transform.Find("Slider").gameObject;
-                slider.AddComponent<StepSlider_25>();
+                slider.AddComponent<StepSlider_01>();
                 return;
+            }
+        }
+        private class StepSlider_01 : ModSliderOption.SliderValue
+        {
+            protected override void UpdateLabel()
+            {
+                slider.value = Mathf.Round(slider.value * 10) / 10;
+                base.UpdateLabel();
             }
         }
         private class StepSlider_1 : ModSliderOption.SliderValue
@@ -158,23 +157,22 @@ namespace Rm_VehicleLightsImproved
 
             AddSliderOption("CyclopsFloodLightEnergyPerDay",    "L.EPD: Cyclops Flood", 0f, 200f, Config<LightsConfig>.Get().CyclopsFloodLightEnergyPerDay, 20f);
             AddSliderOption("CyclopsCameraLightEnergyPerDay",   "L.EPD: Cyclops Camera", 0f, 100f, Config<LightsConfig>.Get().CyclopsCameraLightEnergyPerDay, 10f);
-            AddSliderOption("CyclopsIdlingEnergyPerDay",        "EPD: Cyclops Engine Idle", 0f, 30f, Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay, 3f);
-            AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Running", 0f, 6000f, Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
 
             AddSliderOption("MapRoomCameraLightEnergyPerDay",   "L.EPD: Scanner Camera", 0f, 80f, Config<LightsConfig>.Get().MapRoomCameraLightEnergyPerDay, 8f);
 
 
             AddToggleOption("CyclopsSwapLightButtons",          "Cyclops Swap Light Buttons", Config<LightsConfig>.Get().CyclopsSwapLightButtons);
-            AddToggleOption("CyclopsAlternativeCameraControls", "Cyclops Alt. Camera Controls", Config<LightsConfig>.Get().CyclopsAlternativeCameraControls);
 
-            AddSliderOption("CyclopsCameraRotationDamper",      "Cyclops Camera Damper", 0.01f, 5f, Config<LightsConfig>.Get().CyclopsCameraRotationDamper, 1f, "{0:F2}");
             AddSliderOption("CyclopsCameraLightRange",          "Cyclops Camera Light Range", 0f, 200f, Config<LightsConfig>.Get().CyclopsCameraLightRange, 60f);
             AddSliderOption("CyclopsCameraLightIntensity",      "Cyclops Camera Light Intensity", 0.01f, 4.0f, Config<LightsConfig>.Get().CyclopsCameraLightIntensity, 1f, "{0:F2}");
             
             AddToggleOption("BaseAutoLightDim",                 "Cyclops/Base Light Dim On Exit", Config<LightsConfig>.Get().BaseAutoLightDim);
+            AddSliderOption("BaseLightFadeDuration",            "Cyclops/Base Light Fade Dur.", 0.1f, 5.0f, Config<LightsConfig>.Get().BaseLightFadeDuration, 1f, "{0:F1}");
             AddToggleOption("IncludeBaseLights",                "Include Base Lights", Config<LightsConfig>.Get().IncludeBaseLights);
 
+            
             AddKeybindOption("ExosuitToggleLightKey",           "Prawn Suit Light Toggle", GameInput.GetPrimaryDevice(), Config<LightsConfig>.Get().ExosuitToggleLightKey);
+            AddToggleOption("ExosuitToggleLightHud",            "Prawn Suit Light Toggle Hud", Config<LightsConfig>.Get().ExosuitToggleLightHud);
 
             constructed = true;
         }

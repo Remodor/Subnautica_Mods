@@ -7,7 +7,8 @@ namespace Rm_VehicleLightsImproved
     internal static class ExosuitSettings
     {
         internal static float lightEnergyConsumption = 0f;
-        internal static KeyCode exosuitToggleLightKey = KeyCode.Mouse2;
+        internal static KeyCode toggleLightKey = KeyCode.Mouse2;
+        internal static bool toggleLightHud = true;
     }
     public class ExosuitCustomLight : MonoBehaviour
     {
@@ -80,7 +81,7 @@ namespace Rm_VehicleLightsImproved
                 FixLightsActive();
                 UpdateLightEnergy();
                 if (isPilotMode
-                    && Input.GetKeyUp(ExosuitSettings.exosuitToggleLightKey)
+                    && Input.GetKeyUp(ExosuitSettings.toggleLightKey)
                     && energyInterface.hasCharge
                     && !Player.main.GetPDA().isInUse
                     && global::Utils.GetLocalPlayerComp().GetMode() == Player.Mode.LockedPiloting)
