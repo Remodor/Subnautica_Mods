@@ -17,12 +17,12 @@ namespace Rm_VehiclesImproved
         public bool DebugEnergyInfo = false;
         public bool DebugEnergyInfoModify = false;
 
-        public float DebugEnergyHud_Position_X = -475;
-        public float DebugEnergyHud_Position_Y = 225;
+        public float DebugEnergyHud_Position_X = 15;
+        public float DebugEnergyHud_Position_Y = 395;
         public float DebugEnergyHud_Size_X = 500;
-        public float DebugEnergyHud_Size_Y = 150;
-        public int DebugEnergyHud_FontSize = 30;
-        public string DebugEnergyHud_Text = "Energy Consumption: ";
+        public float DebugEnergyHud_Size_Y = 250;
+        public int DebugEnergyHud_FontSize = 20;
+        public string DebugEnergyHud_Text = "Energy: ";
         public void ApplyModifier()
         {
             CyclopsSettings.engineIdlingEnergyConsumption= ConvertToSeconds(CyclopsIdlingEnergyPerDay);

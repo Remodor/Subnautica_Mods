@@ -4,6 +4,7 @@ using System;
 using UnityEngine.UI;
 using Rm_Config;
 using Steamworks;
+using System.IO;
 
 namespace Rm_VehiclesImproved
 {
@@ -63,9 +64,9 @@ namespace Rm_VehiclesImproved
         internal static float timestamp = 0;
         internal static float energyLevel = 0;
 
-        internal const int timeEnergy_DeltaValues_Size = 3;
-        internal static float[,] timeEnergy_DeltaValues = new float[timeEnergy_DeltaValues_Size, 2];
-        internal static int currentItteration = 0;
+        internal static float oldTimeDelta = 0;
+        internal static float oldEnergyDelta = 0;
+
         internal static State currentState = State.None;
         internal enum State{
             None,
@@ -75,29 +76,17 @@ namespace Rm_VehiclesImproved
         static void DrawEnergyInfo(float currentEnergyLevel, float timeDelta)
         {
             float energyDelta = currentEnergyLevel - energyLevel;
-            timeEnergy_DeltaValues[currentItteration, 0] = timeDelta;
-            timeEnergy_DeltaValues[currentItteration, 1] = energyDelta;
-            Console.WriteLine("#8.0");
-            currentItteration++;
-            if (currentItteration == timeEnergy_DeltaValues_Size)
-            {
-                currentItteration = 0;
-            }
 
-            float totalTimeDelta = 0;
-            float totalEnergyDelta = 0;
-            Console.WriteLine("#8.1");
-            for (int i = 0; i < timeEnergy_DeltaValues_Size; i++)
-            {
-                totalTimeDelta += timeEnergy_DeltaValues[i, 0];
-                totalEnergyDelta += timeEnergy_DeltaValues[i, 1];
-            }
+            float totalTimeDelta = timeDelta + oldTimeDelta;
+            float totalEnergyDelta = energyDelta + oldEnergyDelta;
 
             float dailyEnergyConsumption = Mathf.RoundToInt(1200f / totalTimeDelta * totalEnergyDelta);
             EnergyInfo.energyDisplayText.text = EnergyInfo.hud_Text + dailyEnergyConsumption;
             EnergyInfo.gameObject.SetActive(true);
             energyLevel = currentEnergyLevel;
             timestamp = DayNightCycle.main.timePassedAsFloat;
+            oldTimeDelta = timeDelta;
+            oldEnergyDelta = energyDelta;
         }
         static void ModifyHud()
         {
@@ -139,6 +128,12 @@ namespace Rm_VehiclesImproved
                 {
                     EnergyInfo.hud_FontSize--;
                 }
+                //Reload
+                else if(Input.GetKeyDown(KeyCode.Keypad5))
+                {
+                    Config<VehiclesConfig>.LoadConfiguration();
+                    Config<VehiclesConfig>.Get().ApplyModifier();
+                }
                 else
                 {
                     return;
@@ -162,59 +157,45 @@ namespace Rm_VehiclesImproved
         static void Postfix(Player __instance)
         {
             float timeDelta;
-            if (EnergyInfo.enabled && (timeDelta = DayNightCycle.main.timePassedAsFloat - timestamp) > 0.07f)
+            if (EnergyInfo.enabled)
             {
-                Console.WriteLine("#2");
-                if (Player.main.currentMountedVehicle != null && Player.main.currentMountedVehicle.energyInterface != null)
-                {
-                    Console.WriteLine("#3");
-
-                    float currentEnergyLevel = Player.main.currentMountedVehicle.energyInterface.TotalCanProvide(out int sourceCount);
-                    if (currentState != State.Vehicle)
+                ModifyHud();
+                if ((timeDelta = DayNightCycle.main.timePassedAsFloat - timestamp) > 0.1f) {
+                    if (Player.main.currentMountedVehicle != null && Player.main.currentMountedVehicle.energyInterface != null)
                     {
-                        Console.WriteLine("#4");
-
-                        currentState = State.Vehicle;
-                        Array.Clear(timeEnergy_DeltaValues, 0, timeEnergy_DeltaValues_Size);
-                        energyLevel = currentEnergyLevel;
-                        timestamp = DayNightCycle.main.timePassedAsFloat;
-                    } else
-                    {
-                        Console.WriteLine("#5");
-
-                        DrawEnergyInfo(currentEnergyLevel, timeDelta);
-                        ModifyHud();
+                        float currentEnergyLevel = Player.main.currentMountedVehicle.energyInterface.TotalCanProvide(out int sourceCount);
+                        if (currentState != State.Vehicle)
+                        {
+                            currentState = State.Vehicle;
+                            oldTimeDelta = oldEnergyDelta = 0;
+                            energyLevel = currentEnergyLevel;
+                            timestamp = DayNightCycle.main.timePassedAsFloat;
+                        }
+                        else
+                        {
+                            DrawEnergyInfo(currentEnergyLevel, timeDelta);
+                        }
                     }
-                }
-                else if(Player.main.currentSub != null && Player.main.currentSub.powerRelay != null)
-                {
-                    Console.WriteLine("#6");
-                    float currentEnergyLevel = Player.main.currentSub.powerRelay.GetPower();
-                    Console.WriteLine("#6.5");
-
-                    if (currentState != State.Subroot)
+                    else if (Player.main.currentSub != null && Player.main.currentSub.powerRelay != null)
                     {
-                        Console.WriteLine("#7");
-
-                        currentState = State.Subroot;
-                        Array.Clear(timeEnergy_DeltaValues, 0, timeEnergy_DeltaValues_Size);
-                        energyLevel = currentEnergyLevel;
-                        timestamp = DayNightCycle.main.timePassedAsFloat;
+                        float currentEnergyLevel = Player.main.currentSub.powerRelay.GetPower();
+                        if (currentState != State.Subroot)
+                        {
+                            currentState = State.Subroot;
+                            oldTimeDelta = oldEnergyDelta = 0;
+                            energyLevel = currentEnergyLevel;
+                            timestamp = DayNightCycle.main.timePassedAsFloat;
+                        }
+                        else
+                        {
+                            DrawEnergyInfo(currentEnergyLevel, timeDelta);
+                        }
                     }
-                    else
+                    else if (currentState != State.None)
                     {
-                        Console.WriteLine("#8");
-
-                        DrawEnergyInfo(currentEnergyLevel, timeDelta);
-                        ModifyHud();
+                        currentState = State.None;
+                        EnergyInfo.gameObject.SetActive(false);
                     }
-                }
-                else if(currentState != State.None)
-                {
-                    Console.WriteLine("#9");
-
-                    currentState = State.None;
-                    EnergyInfo.gameObject.SetActive(false);
                 }
             }
         }
