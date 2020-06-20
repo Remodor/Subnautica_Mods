@@ -19,15 +19,15 @@ namespace Rm_VehiclesImproved
             switch (e.Id)
             {
                 case "CyclopsIdlingEnergyPerDay":
-                    Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay = e.Value;
+                    Config<VehiclesConfig>.Get().CyclopsIdlingEnergyPerDay = e.Value;
                     Changed();
                     return;
                 case "CyclopsCameraRotationDamper":
-                    Config<LightsConfig>.Get().CyclopsCameraRotationDamper = (float)Math.Round(e.Value, 2);
+                    Config<VehiclesConfig>.Get().CyclopsCameraRotationDamper = (float)Math.Round(e.Value, 2);
                     Changed();
                     return;
                 case "CyclopsSilentRunningEnergyPerDay":
-                    Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay = e.Value;
+                    Config<VehiclesConfig>.Get().CyclopsSilentRunningEnergyPerDay = e.Value;
                     Changed();
                     return;
             }
@@ -36,12 +36,22 @@ namespace Rm_VehiclesImproved
         {
             if (e.Id == "CyclopsAlternativeCameraControls")
             {
-                Config<LightsConfig>.Get().CyclopsAlternativeCameraControls = e.Value;
+                Config<VehiclesConfig>.Get().CyclopsAlternativeCameraControls = e.Value;
                 Changed();
             }
             if (e.Id == "CyclopsAutoCloseHatch")
             {
-                Config<LightsConfig>.Get().CyclopsAutoCloseHatch = e.Value;
+                Config<VehiclesConfig>.Get().CyclopsAutoCloseHatch = e.Value;
+                Changed();
+            }
+            if (e.Id == "DebugEnergyInfo")
+            {
+                Config<VehiclesConfig>.Get().DebugEnergyInfo = e.Value;
+                Changed();
+            }
+            if (e.Id == "DebugEnergyInfoModify")
+            {
+                Config<VehiclesConfig>.Get().DebugEnergyInfoModify = e.Value;
                 Changed();
             }
         }
@@ -49,8 +59,8 @@ namespace Rm_VehiclesImproved
         {
             if (constructed)
             {
-                Config<LightsConfig>.Get().ApplyModifier();
-                Config<LightsConfig>.SaveConfiguration();
+                Config<VehiclesConfig>.Get().ApplyModifier();
+                Config<VehiclesConfig>.SaveConfiguration();
             }
         }
 
@@ -89,13 +99,17 @@ namespace Rm_VehiclesImproved
         }
         public override void BuildModOptions()
         {
-            AddSliderOption("CyclopsIdlingEnergyPerDay",        "EPD: Cyclops Engine Idle", 0f, 30f, Config<LightsConfig>.Get().CyclopsIdlingEnergyPerDay, 3f);
-            AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Running", 0f, 6000f, Config<LightsConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
+            AddSliderOption("CyclopsIdlingEnergyPerDay",        "EPD: Cyclops Engine Idle", 0f, 30f, Config<VehiclesConfig>.Get().CyclopsIdlingEnergyPerDay, 3f);
+            AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Running", 0f, 6000f, Config<VehiclesConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
 
-            AddToggleOption("CyclopsAlternativeCameraControls", "Cyclops Alt. Camera Controls", Config<LightsConfig>.Get().CyclopsAlternativeCameraControls);
-            AddToggleOption("CyclopsAutoCloseHatch", "Cyclops Auto Close Hatch", Config<LightsConfig>.Get().CyclopsAutoCloseHatch);
+            AddToggleOption("CyclopsAlternativeCameraControls", "Cyclops Alt. Camera Controls", Config<VehiclesConfig>.Get().CyclopsAlternativeCameraControls);
+            AddToggleOption("CyclopsAutoCloseHatch", "Cyclops Auto Close Hatch", Config<VehiclesConfig>.Get().CyclopsAutoCloseHatch);
 
-            AddSliderOption("CyclopsCameraRotationDamper",      "Cyclops Camera Damper", 0.01f, 5f, Config<LightsConfig>.Get().CyclopsCameraRotationDamper, 1f, "{0:F2}");
+            AddSliderOption("CyclopsCameraRotationDamper",      "Cyclops Camera Damper", 0.01f, 5f, Config<VehiclesConfig>.Get().CyclopsCameraRotationDamper, 1f, "{0:F2}");
+
+            AddToggleOption("DebugEnergyInfo", "Draw Debug Energy Info", Config<VehiclesConfig>.Get().DebugEnergyInfo);
+            AddToggleOption("DebugEnergyInfoModify", "Debug Energy Info Modify", Config<VehiclesConfig>.Get().DebugEnergyInfoModify);
+
             constructed = true;
         }
     }

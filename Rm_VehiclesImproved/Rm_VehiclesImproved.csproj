@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony-1.2.0.1">
@@ -60,8 +61,16 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\Epic Games\Subnautica\Subnautica_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Epic Games\Subnautica\Subnautica_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>..\..\..\..\Epic Games\Subnautica\Subnautica_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Epic Games\Subnautica\Subnautica_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\Epic Games\Subnautica\Subnautica_Data\Managed\UnityEngine.UI.dll</HintPath>
@@ -76,7 +85,9 @@
     <Compile Include="src\configuration\Config.cs" />
     <Compile Include="src\configuration\VehiclesConfig.cs" />
     <Compile Include="src\configuration\Options.cs" />
+    <Compile Include="src\patcher\EnergyInfoPatcher.cs" />
     <Compile Include="src\patcher\CyclopsPatcher.cs" />
+    <Compile Include="src\patcher\PlayerPatcher.cs" />
     <Compile Include="src\patcher\SubRootPatcher.cs" />
     <Compile Include="src\QPatch.cs" />
   </ItemGroup>

@@ -11,7 +11,7 @@ namespace Rm_VehiclesImproved
         public static void Patch() 
         {
             Console.WriteLine("[Rm_VehiclesImproved] Begin patching:");
-            Config<LightsConfig>.LoadConfiguration().ApplyModifier();
+            Config<VehiclesConfig>.LoadConfiguration().ApplyModifier();
             OptionsPanelHandler.RegisterModOptions(new Options());
             var harmony = HarmonyInstance.Create("com.remodor.vehiclesimproved");
             harmony.PatchAll(Assembly.GetExecutingAssembly());

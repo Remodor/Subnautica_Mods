@@ -62,7 +62,9 @@ namespace Rm_VehicleLightsImproved
         {
             if (docked)
             {
-                __instance.GetComponent<ExosuitCustomLight>().SetLightsActive(false);
+                var exosuitCustomLight = __instance.GetComponent<ExosuitCustomLight>();
+                if (exosuitCustomLight != null)
+                    exosuitCustomLight.SetLightsActive(false);
             }
         }
     }

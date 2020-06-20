@@ -41,7 +41,7 @@ namespace Rm_VehiclesImproved
     {
         static void Postfix(VehicleDockingBay __instance)
         {
-            if (CyclopsSettings.autoCloseHatch)
+            if (CyclopsSettings.autoCloseHatch && __instance.subRoot.isCyclops)
             {
                 var CinematicHatchControl = __instance.subRoot.GetComponentInChildren<CinematicHatchControl>();
                 if (CinematicHatchControl != null)
