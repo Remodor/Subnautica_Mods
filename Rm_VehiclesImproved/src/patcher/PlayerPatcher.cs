@@ -113,11 +113,11 @@ namespace Rm_VehiclesImproved
                 //RectSize
                 else if (Input.GetKeyDown(KeyCode.KeypadMultiply))
                 {
-                    EnergyInfo.hud_Size += new Vector2(10, 10);
+                    EnergyInfo.hud_Size += new Vector2(10, 5);
                 }
                 else if (Input.GetKeyDown(KeyCode.KeypadDivide))
                 {
-                    EnergyInfo.hud_Size += new Vector2(-10, -10);
+                    EnergyInfo.hud_Size += new Vector2(-10, -5);
                 }
                 //FontSize
                 else if (Input.GetKeyDown(KeyCode.KeypadPlus))
