@@ -17,8 +17,10 @@ namespace Rm_VehiclesImproved
         public bool DebugEnergyInfo = false;
         public bool DebugEnergyInfoModify = false;
 
-        public Vector3 DebugEnergyHud_Position = new Vector3(-475, 225, 0);
-        public Vector2 DebugEnergyHud_Size = new Vector2(500, 150);
+        public float DebugEnergyHud_Position_X = -475;
+        public float DebugEnergyHud_Position_Y = 225;
+        public float DebugEnergyHud_Size_X = 500;
+        public float DebugEnergyHud_Size_Y = 150;
         public int DebugEnergyHud_FontSize = 30;
         public string DebugEnergyHud_Text = "Energy Consumption: ";
         public void ApplyModifier()
@@ -34,8 +36,8 @@ namespace Rm_VehiclesImproved
                 EnergyInfo.gameObject.SetActive(DebugEnergyInfo);
             }
             EnergyInfo.modify = DebugEnergyInfoModify;
-            EnergyInfo.hud_Position = DebugEnergyHud_Position;
-            EnergyInfo.hud_Size = DebugEnergyHud_Size;
+            EnergyInfo.hud_Position = new Vector3(DebugEnergyHud_Position_X, DebugEnergyHud_Position_Y, 0);
+            EnergyInfo.hud_Size = new Vector2(DebugEnergyHud_Size_X, DebugEnergyHud_Size_Y);
             EnergyInfo.hud_FontSize = DebugEnergyHud_FontSize;
             EnergyInfo.hud_Text = DebugEnergyHud_Text;
         }
