@@ -4,13 +4,6 @@ using UnityEngine;
 
 namespace Rm_VehiclesImproved
 {
-    public class DebugEnergyHud
-    {
-        public Vector3 position = new Vector3(-475, 225, 0);
-        public Vector2 size = new Vector2(500, 150);
-        public int fontSize = 30;
-        public string text = "Energy Consumption: ";
-    }
     public class VehiclesConfig
     {
         public float CyclopsIdlingEnergyPerDay = 0f;
@@ -24,8 +17,10 @@ namespace Rm_VehiclesImproved
         public bool DebugEnergyInfo = false;
         public bool DebugEnergyInfoModify = false;
 
-        public DebugEnergyHud DebugEnergyInfoHud;
-
+        public Vector3 DebugEnergyHud_Position = new Vector3(-475, 225, 0);
+        public Vector2 DebugEnergyHud_Size = new Vector2(500, 150);
+        public int DebugEnergyHud_FontSize = 30;
+        public string DebugEnergyHud_Text = "Energy Consumption: ";
         public void ApplyModifier()
         {
             CyclopsSettings.engineIdlingEnergyConsumption= ConvertToSeconds(CyclopsIdlingEnergyPerDay);
@@ -39,7 +34,10 @@ namespace Rm_VehiclesImproved
                 EnergyInfo.gameObject.SetActive(DebugEnergyInfo);
             }
             EnergyInfo.modify = DebugEnergyInfoModify;
-            EnergyInfo.hud = DebugEnergyInfoHud;
+            EnergyInfo.hud_Position = DebugEnergyHud_Position;
+            EnergyInfo.hud_Size = DebugEnergyHud_Size;
+            EnergyInfo.hud_FontSize = DebugEnergyHud_FontSize;
+            EnergyInfo.hud_Text = DebugEnergyHud_Text;
         }
         public static float ConvertToSeconds(float energyPerDay)
         {
