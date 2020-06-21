@@ -172,7 +172,7 @@ namespace Rm_VehiclesImproved
         {
             if (__instance.active)
             {
-                float rawEnergyCost = Mathf.Max(CyclopsSettings.silentRunningEnergyConsumption * __instance.subRoot.noiseManager.GetNoisePercent(), CyclopsSettings.silentRunningEnergyConsumption * 0.05f) * 2;
+                float rawEnergyCost = Mathf.Max(CyclopsSettings.silentRunningEnergyConsumption * __instance.subRoot.noiseManager.GetNoisePercent() * 2, CyclopsSettings.silentRunningEnergyConsumption * 0.01f);
                 float energyCost = DayNightCycle.main.deltaTime * rawEnergyCost;
                 if (!__instance.subRoot.powerRelay.ConsumeEnergy(energyCost, out _))
                 {

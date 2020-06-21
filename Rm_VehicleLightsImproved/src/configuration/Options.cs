@@ -167,7 +167,7 @@ namespace Rm_VehicleLightsImproved
             AddSliderOption("CyclopsCameraLightIntensity",      "Cyclops Camera Light Intensity", 0.01f, 4.0f, Config<LightsConfig>.Get().CyclopsCameraLightIntensity, 1f, "{0:F2}");
             
             AddToggleOption("BaseAutoLightDim",                 "Cyclops/Base Light Dim On Exit", Config<LightsConfig>.Get().BaseAutoLightDim);
-            AddSliderOption("BaseLightFadeDuration",            "Cyclops/Base Light Fade Dur.", 0.1f, 5.0f, Config<LightsConfig>.Get().BaseLightFadeDuration, 1f, "{0:F1}");
+            AddSliderOption("BaseLightFadeDuration",            "Cyclops/Base Light Fade Dur.", 0.1f, 5.0f, Config<LightsConfig>.Get().BaseLightFadeDuration, 1.5f, "{0:F1}");
             AddToggleOption("IncludeBaseLights",                "Include Base Lights", Config<LightsConfig>.Get().IncludeBaseLights);
 
             

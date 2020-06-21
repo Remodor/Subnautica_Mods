@@ -86,7 +86,9 @@
     <Compile Include="src\configuration\VehiclesConfig.cs" />
     <Compile Include="src\configuration\Options.cs" />
     <Compile Include="src\patcher\CyclopsPatcher.cs" />
+    <Compile Include="src\patcher\ExosuitPatcher.cs" />
     <Compile Include="src\patcher\PlayerPatcher.cs" />
+    <Compile Include="src\patcher\SeaMothPatcher.cs" />
     <Compile Include="src\patcher\SubRootPatcher.cs" />
     <Compile Include="src\QPatch.cs" />
   </ItemGroup>

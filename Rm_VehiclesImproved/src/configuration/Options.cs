@@ -99,7 +99,7 @@ namespace Rm_VehiclesImproved
         }
         public override void BuildModOptions()
         {
-            AddSliderOption("CyclopsIdlingEnergyPerDay",        "EPD: Cyclops Engine Idle", 0f, 30f, Config<VehiclesConfig>.Get().CyclopsIdlingEnergyPerDay, 3f);
+            AddSliderOption("CyclopsIdlingEnergyPerDay",        "EPD: Cyclops Engine Idle", 0f, 30f, Config<VehiclesConfig>.Get().CyclopsIdlingEnergyPerDay, 20f);
             AddSliderOption("CyclopsSilentRunningEnergyPerDay", "EPD: Cyclops Silent Running", 0f, 6000f, Config<VehiclesConfig>.Get().CyclopsSilentRunningEnergyPerDay, 1200f);
 
             AddToggleOption("CyclopsAlternativeCameraControls", "Cyclops Alt. Camera Controls", Config<VehiclesConfig>.Get().CyclopsAlternativeCameraControls);

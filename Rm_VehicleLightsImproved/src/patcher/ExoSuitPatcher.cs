@@ -1,9 +1,5 @@
 ﻿using Harmony;
-using System;
 using System.Text;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Reflection;
 
 namespace Rm_VehicleLightsImproved
 {
@@ -99,32 +95,6 @@ namespace Rm_VehicleLightsImproved
                     HandReticle.main.useText1 = "\n" + HandReticle.main.useText1 + toggleLightTextOn;
                 }
             }
-        }
-        // Removes the annoying "Exit" overlay.
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            var methodAppendLine = typeof(StringBuilder).GetMethod(nameof(StringBuilder.AppendLine), new Type[] { typeof(string) });
-            int state = 0;
-            foreach (CodeInstruction instruction in instructions)
-            {
-                switch (state)
-                {
-                    case 0:
-                        if (instruction.operand as String == "PressToExit")
-                        {
-                            state++;
-                            continue;
-                        }
-                        break;
-                    case 1:
-                        if (instruction.opcode == OpCodes.Callvirt && instruction.operand as MethodInfo == methodAppendLine)
-                        {
-                            state++;
-                        }
-                        continue;
-                }
-                yield return instruction;
-            }
-        }
+        }        
     }
 }

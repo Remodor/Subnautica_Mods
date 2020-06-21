@@ -9,11 +9,11 @@ namespace Rm_VehiclesImproved
         public float CyclopsIdlingEnergyPerDay = 0f;
         public float CyclopsSilentRunningEnergyPerDay = 1200f;
 
-        public bool CyclopsAlternativeCameraControls = true;
+        public bool CyclopsAlternativeCameraControls = false;
 
         public float CyclopsCameraRotationDamper = 3f;
 
-        public bool CyclopsAutoCloseHatch = true;
+        public bool CyclopsAutoCloseHatch = false;
         public bool DebugEnergyInfo = false;
         public bool DebugEnergyInfoModify = false;
 
