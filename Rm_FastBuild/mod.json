@@ -1,0 +1,11 @@
+{
+  "Id": "Rm_FastBuild",
+  "DisplayName": "Fast Build",
+  "Author": "Remodor",
+  "Version": "1.0.0",
+  "Requires": [],
+  "AssemblyName": "Rm_FastBuild.dll",
+  "EntryMethod": "Rm_FastBuild.QPatch.Patch",
+  "Config": {},
+  "Enable": true
+}
