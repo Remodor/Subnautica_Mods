@@ -19,12 +19,13 @@ namespace Rm_BetterFastCraft
             if (CraftingSettings.mode == CraftConfig.ApplyMode.Relative)
             {
                 duration *= CraftingSettings.craftingSpeed;
+                duration = Mathf.Max(duration, CraftingSettings.minimumDuration, 0.1f);
             }
             else
             {
                 duration = CraftingSettings.craftingSpeed;
+                duration = Mathf.Max(duration, 0.1f);
             }
-            duration = Mathf.Max(duration, CraftingSettings.minimumDuration, 0.1f);
         }
     }
 }
