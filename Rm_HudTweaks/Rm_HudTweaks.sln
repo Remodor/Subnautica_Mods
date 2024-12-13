@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30002.166
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rm_HudTweaks", "Rm_HudTweaks.csproj", "{C017715B-69A2-4335-91B2-4A4190A17E0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rm_HudTweaks", "Rm_HudTweaks.csproj", "{1E0B2333-2705-433C-BDF5-3D090B750203}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C017715B-69A2-4335-91B2-4A4190A17E0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C017715B-69A2-4335-91B2-4A4190A17E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C017715B-69A2-4335-91B2-4A4190A17E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C017715B-69A2-4335-91B2-4A4190A17E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0B2333-2705-433C-BDF5-3D090B750203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0B2333-2705-433C-BDF5-3D090B750203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0B2333-2705-433C-BDF5-3D090B750203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0B2333-2705-433C-BDF5-3D090B750203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A4C18309-5FB3-44EC-9AB5-BE6059603716}
+		SolutionGuid = {BE389D2E-6619-431D-9592-1DD39DF53E92}
 	EndGlobalSection
 EndGlobal

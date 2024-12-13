@@ -1,0 +1,13 @@
+{
+    "cSpell.words": [
+        "snmodding"
+    ],
+    "gitCommitMessageEditor.intelliSense.completion.scopes": [
+        {
+            "scope": "Template"
+        },
+        {
+            "scope": "HudTweaks"
+        }
+    ],
+}
