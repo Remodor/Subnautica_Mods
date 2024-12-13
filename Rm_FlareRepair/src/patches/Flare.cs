@@ -72,7 +72,7 @@ class FlarePatches
                 Dbg.FloatChanged("NoEnergy: flareActivateTime", __instance.flareActivateTime);
             }
 #endif
-            if (!Config.KeepDepletedFlare_())
+            if (!Config.KeepDepletedFlare_)
             {
                 UnityEngine.Object.Destroy(__instance.gameObject, 2f);
                 return false; //Full override!
@@ -107,9 +107,9 @@ class FlarePatches
         __instance.flareActivateTime = timePassed - cleanedDeltaActiveTime;
         __instance.UpdateLight();
         __instance.flareActivateTime = previousFlareActiveTime;
-        __instance.light.intensity *= Config.IntensityModifier_();
+        __instance.light.intensity *= Config.IntensityModifier_;
         __instance.loopingSound.Play();
-        float totalDuration = Config.TotalDuration_();
+        float totalDuration = Config.TotalDuration_;
         float timeLeft = Mathf.Max(__instance.energyLeft + totalDuration - timePassed, 0f);
         float destructionDuration = 3f * dayNightSpeed;
 #if DEBUG
@@ -117,11 +117,11 @@ class FlarePatches
         Dbg.FloatChanged("totalDuration", totalDuration);
         Dbg.FloatChanged("destructionDuration", destructionDuration);
 #endif
-        float dimmingThreshold = totalDuration * Config.ProgressiveDimmingThreshold_();
+        float dimmingThreshold = totalDuration * Config.ProgressiveDimmingThreshold_;
         if (timeLeft < dimmingThreshold)
         {
             float relativeProgression = timeLeft / dimmingThreshold;
-            float minimum = Config.MinimumRelativeFactor_();
+            float minimum = Config.MinimumRelativeFactor_;
             float remainder = 1 - minimum;
             float factor = minimum + remainder * relativeProgression;
 #if DEBUG

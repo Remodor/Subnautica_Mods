@@ -19,5 +19,8 @@ public class Plugin : BaseUnityPlugin
         Rm_FlareRepair.Config.RegisterConfig();
 
         Harmony.CreateAndPatchAll(Assembly, $"{PluginInfo.PLUGIN_GUID}");
+#if DEBUG
+        Dbg.Print("### Debug Build ###");
+#endif
     }
 }

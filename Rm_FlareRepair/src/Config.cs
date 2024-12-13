@@ -27,9 +27,9 @@ public class Config : ConfigFile
     {
         Instance = OptionsPanelHandler.RegisterModOptions<Config>();
     }
-    public static float TotalDuration_() => Instance.TotalDuration * 1200;
-    public static float IntensityModifier_() => Instance.IntensityModifier;
-    public static bool KeepDepletedFlare_() => Instance.KeepDepletedFlare;
-    public static float ProgressiveDimmingThreshold_() => Instance.ProgressiveDimmingThreshold;
-    public static float MinimumRelativeFactor_() => Instance.MinimumRelativeFactor;
+    public static float TotalDuration_ => Instance.TotalDuration * 1200;
+    public static float IntensityModifier_ => Instance.IntensityModifier;
+    public static bool KeepDepletedFlare_ => Instance.KeepDepletedFlare;
+    public static float ProgressiveDimmingThreshold_ => Instance.ProgressiveDimmingThreshold;
+    public static float MinimumRelativeFactor_ => Instance.MinimumRelativeFactor;
 }
