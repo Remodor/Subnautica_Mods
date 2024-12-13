@@ -1,53 +1,27 @@
-﻿using System.IO;
-using System;
-using Oculus.Newtonsoft.Json;
-namespace Rm_Config
-{
-    internal class Config<T> where T : new()
-    {
-        private static T configuration;
-        private static string file;
-        internal static T LoadConfiguration(string file)
-        {
-            Config<T>.file = file;
-            try
-            {
-                string configPath = CreateConfigPath();
-                Console.WriteLine(string.Format("[{0}] Load configuration:    \"{1}\"", typeof(T).Namespace, configPath));
-                string configJson = File.ReadAllText(configPath);
-                configuration = JsonConvert.DeserializeObject<T>(configJson);
-                Console.WriteLine(string.Format("[{0}] ConfigFile found!", typeof(T).Namespace));
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine(string.Format("[{0}] ConfigFile not found! -> creating ConfigFile..", typeof(T).Namespace));
-                configuration = new T();
-                SaveConfiguration();
-            }
-            return configuration;
-        }
-        internal static T LoadConfiguration()
-        {
-            return LoadConfiguration("config.json");
-        }
-        internal static void SaveConfiguration()
-        {
-            string configPath = CreateConfigPath();
-            string configJson = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-            File.WriteAllText(configPath, configJson);
-        }
-        internal static T Get()
-        {
-            if (configuration == null)
-            {
-                LoadConfiguration();
-            }
-            return configuration;
-        }
+using Nautilus.Handlers;
+using Nautilus.Json;
+using Nautilus.Options.Attributes;
 
-        private static string CreateConfigPath()
-        {
-            return "./QMods/" + typeof(T).Namespace + "/" + file;
-        }
+namespace Rm_EnergyInfo;
+[Menu("Energy Info Settings")]
+public class Config : ConfigFile
+{
+    //REMOVE 
+    [Slider("Example Slider", 0.0f, 1.0f, DefaultValue = 0.5f, Format = "{0:F2}", Step = 0.01f, Tooltip = "This is an example slider. It does..")]
+    public float ExampleSlider = 0.5f;
+
+    //REMOVE 
+    [Toggle("Example Bool", Tooltip = "This is an example slider.")]
+    public bool ExampleBool = true;
+
+    private static Config Instance;
+    public Config() : base() { }
+    public static void RegisterConfig()
+    {
+        Instance = OptionsPanelHandler.RegisterModOptions<Config>();
     }
+    //REMOVE 
+    public static float ExampleSlider_() => Instance.ExampleSlider * 1200;
+    //REMOVE 
+    public static bool ExampleBool_() => Instance.ExampleBool;
 }
