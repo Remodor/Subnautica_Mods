@@ -18,26 +18,6 @@ class CyclopsLastSpeedHoverPatches
     }
 }
 
-[HarmonyPatch(typeof(Player))]
-class PlayerPatches
-{
-    [HarmonyPatch(nameof(Player.EnterPilotingMode))]
-    [HarmonyPostfix]
-    static void EnterPilotingMode_Postfix()
-    {
-        if (Config.CyclopsCrosshairAlways_)
-        {
-            HandReticlePatches.ShowCyclopsCrosshair = true;
-        }
-    }
-    [HarmonyPatch(nameof(Player.ExitPilotingMode))]
-    [HarmonyPostfix]
-    static void ExitPilotingMode_Postfix()
-    {
-        HandReticlePatches.ShowCyclopsCrosshair = false;
-    }
-}
-
 [HarmonyPatch(typeof(CyclopsEngineChangeState))]
 class CyclopsEngineChangeStatePatches
 {

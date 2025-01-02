@@ -27,6 +27,10 @@ public class Config : ConfigFile
 
     [Toggle("Hide Crosshair", Tooltip = "Hide the default crosshair. Other interact icons are not affected.")]
     public bool HideCrosshair = true;
+
+    [Toggle("Hide Scuba Mask", Tooltip = "Hide the scuba mask when diving. Applies when entering the water.")]
+    public bool HideScubaMask = false;
+
     [Toggle("Hide Interact Icons", Tooltip = "Hide the interact icons, e.g. when entering a sub. Depending on the 'Hide Crosshair'-setting, either the default crosshair is shown or nothing if it is hidden.")]
     public bool HideInteractIcons = true;
     [Choice("Cyclops Crosshair", Tooltip = "Show a crosshair when piloting the cyclops. Overrides a hidden crosshair. 'OnlyOnHover': Only shows the crosshair when hovering cyclops control elements.\n(Has additional options: 'Crosshair Icon', 'Speed Linger Time')")]
@@ -53,4 +57,5 @@ public class Config : ConfigFile
     public static bool CyclopsCrosshairOnlyOnHover_ => Instance.CyclopsCrosshair == CyclopsCrosshair.OnlyOnHover;
     public static int CyclopsCrosshairIcon_ => Instance.CyclopsCrosshairIcon;
     public static float CyclopsSpeedLingerTime_ => Instance.CyclopsSpeedLingerTime;
+    public static bool HideScubaMask_ => Instance.HideScubaMask;
 }
