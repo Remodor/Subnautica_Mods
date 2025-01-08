@@ -1,0 +1,112 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Create Empty Subnautica Template",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"new",
+				"snmod_empty",
+				"-n",
+				"${workspaceFolderBasename}"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "Create Subnautica Nautilus Template",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"new",
+				"snmod_nautilus",
+				"-n",
+				"${workspaceFolderBasename}"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "Create Subnautica Mod Template",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"new",
+				"snmod",
+				"-n",
+				"${workspaceFolderBasename}"
+			],
+			"group": "none",
+			"problemMatcher": []
+		},
+		{
+			"label": "Release: build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"-c",
+				"release"
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"presentation": {
+				"clear": true
+			},
+			"hide": true
+		},
+		{
+			"label": "Release: Build and Copy",
+			"command": "xcopy",
+			"args": [
+				"${workspaceFolder}\\bin\\Release\\net472\\${workspaceFolderBasename}.dll",
+				"D:\\Epic Games\\Subnautica\\BepInEx\\plugins\\${workspaceFolderBasename}\\",
+				"/y"
+			],
+			"group": {
+				"isDefault": true,
+				"kind": "build"
+			},
+			"dependsOn": [
+				"Release: build"
+			],
+			"dependsOrder": "sequence",
+			"problemMatcher": []
+		},
+		{
+			"label": "Debug: build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+			],
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"presentation": {
+				"clear": true
+			},
+			"hide": true
+		},
+		{
+			"label": "Debug: Build and Copy",
+			"command": "xcopy",
+			"args": [
+				"${workspaceFolder}\\bin\\Debug\\net472\\${workspaceFolderBasename}.dll",
+				"D:\\Epic Games\\Subnautica\\BepInEx\\plugins\\${workspaceFolderBasename}\\",
+				"/y"
+			],
+			"group": {
+				"isDefault": true,
+				"kind": "test"
+			},
+			"dependsOn": [
+				"Debug: build"
+			],
+			"dependsOrder": "sequence",
+			"problemMatcher": []
+		}
+	]
+}
