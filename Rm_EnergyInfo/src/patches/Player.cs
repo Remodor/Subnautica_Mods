@@ -6,29 +6,30 @@ namespace Rm_EnergyInfo;
 [HarmonyPatch(typeof(Player))]
 class PlayerPatches
 {
-    internal static Text EnergyDisplayText;
-    internal static GameObject EnergyDisplayUI;
+    private static Text EnergyUiText;
+    internal static GameObject EnergyUiObject;
     // Create hud.
     [HarmonyPatch(nameof(Player.Awake))]
     [HarmonyPostfix]
     static void Awake_Postfix(Player __instance)
     {
         var playerHUD = GameObject.Find("HUD");
-        GameObject energyDisplayUI = GameObject.Find("EnergyDisplayUI") ?? new GameObject("EnergyDisplayUI");
-        energyDisplayUI.transform.SetParent(playerHUD.transform, false);
-        var energyDisplayText = energyDisplayUI.GetComponent<Text>() ?? energyDisplayUI.gameObject.AddComponent<Text>();
+        GameObject EnergyUI = GameObject.Find("EnergyUI") ?? new GameObject("EnergyUI");
+        EnergyUI.transform.SetParent(playerHUD.transform, false);
+        var energyDisplayText = EnergyUI.GetComponent<Text>() ?? EnergyUI.gameObject.AddComponent<Text>();
         energyDisplayText.font = __instance.textStyle.font;
         energyDisplayText.fontSize = Config.HudFontSize_;
         energyDisplayText.alignment = TextAnchor.UpperRight;
         energyDisplayText.color = Color.yellow;
+        energyDisplayText.raycastTarget = false;
 
         RectTransform rectTransform = energyDisplayText.GetComponent<RectTransform>();
         rectTransform.localPosition = Config.HudPosition_;
         rectTransform.sizeDelta = Config.HudSize_;
 
-        EnergyDisplayText = energyDisplayText;
-        EnergyDisplayUI = energyDisplayUI;
-        energyDisplayUI.SetActive(false);
+        EnergyUiText = energyDisplayText;
+        EnergyUiObject = EnergyUI;
+        EnergyUI.SetActive(false);
     }
     public const int MaxFontSize = 65;
     static void ModifyHud()
@@ -60,17 +61,19 @@ class PlayerPatches
         {
             Config.HudPosition_ += new Vector3(1, 0, 0);
         }
-        var rectTransform = EnergyDisplayText.GetComponent<RectTransform>();
+        var rectTransform = EnergyUiText.GetComponent<RectTransform>();
         rectTransform.localPosition = Config.HudPosition_;
         rectTransform.sizeDelta = Config.HudSize_;
-        EnergyDisplayText.fontSize = Config.HudFontSize_;
+        EnergyUiText.fontSize = Config.HudFontSize_;
     }
     private static float Timestamp = 0;
     private static float PreviousEnergyLevel = 0;
     private static float HourlyEnergyConsumption = 0;
+    private static float SpikeEnergyConsumption = 0;
+    private static float EnergyDeltaSlope = 0;
+    private static float OldEnergyDeltaSlope = 0;
     private static float OldEnergyDelta = 0;
     private static float OldTimeDelta = 0;
-    private static float SpikeEnergyDelta = 0;
     private static int SpikeLingerDuration = 0;
     private static float SampleInterval = 0.1f;
     private static bool _Reset = true;
@@ -107,7 +110,7 @@ class PlayerPatches
         }
         else
         {
-            EnergyDisplayUI.SetActive(false);
+            EnergyUiObject.SetActive(false);
             return;
         }
         if (Config.ModifyHud_) ModifyHud();
@@ -129,36 +132,31 @@ class PlayerPatches
             return;
         }
         float energyDelta = PreviousEnergyLevel - currentEnergyLevel;
+        OldEnergyDeltaSlope = EnergyDeltaSlope;
+        EnergyDeltaSlope = energyDelta - OldEnergyDelta;
 #if DEBUG
         Dbg.FloatChanged("energyDelta", energyDelta, 1);
         Dbg.FloatChanged("timeDelta", timeDelta, 1);
+        Dbg.FloatChanged("EnergyDeltaSlope", EnergyDeltaSlope, 1);
+        Dbg.FloatChanged("OldEnergyDeltaSlope", OldEnergyDeltaSlope, 1);
 #endif
-        if (Mathf.Abs(energyDelta) > Config.SpikeThreshold_)
+        if (Mathf.Abs(EnergyDeltaSlope) > Config.SpikeThreshold_)
         {
-            if (SpikeLingerDuration == Config.SpikeLingerDuration_ - 1)
-            {
-                SpikeEnergyDelta += energyDelta;
-                HourlyEnergyConsumption = 0;
-                OldEnergyDelta = 0;
-            }
-            else
-            {
-                SpikeEnergyDelta = energyDelta - OldEnergyDelta;
-            }
-            SpikeLingerDuration = Config.SpikeLingerDuration_;
+            var slopeSum = EnergyDeltaSlope + OldEnergyDeltaSlope;
 #if DEBUG
-            Dbg.FloatChanged("SpikeEnergyDelta", SpikeEnergyDelta, 1);
+            Dbg.FloatChanged("slopeSum", slopeSum);
 #endif
+            if (Mathf.Abs(slopeSum) < Config.SpikeThreshold_)
+            {
+                SpikeLingerDuration = Config.SpikeLingerDuration_;
+                SpikeEnergyConsumption = OldEnergyDeltaSlope - slopeSum;
+                HourlyEnergyConsumption = energyDelta * 50f / timeDelta;
+            }
         }
         else
         {
             float totalEnergyDelta = OldEnergyDelta + energyDelta;
             float totalTimeDelta = OldTimeDelta + timeDelta;
-#if DEBUG
-            Dbg.FloatChanged("totalEnergyDelta", totalEnergyDelta, 1);
-            Dbg.FloatChanged("totalTimeDelta", totalTimeDelta, 1);
-#endif
-            OldEnergyDelta = energyDelta;
             HourlyEnergyConsumption = totalEnergyDelta * 50f / totalTimeDelta;
         }
         if (SpikeLingerDuration > 0)
@@ -166,11 +164,11 @@ class PlayerPatches
             SpikeLingerDuration--;
             if (Config.DrawEnergyUnit_)
             {
-                EnergyDisplayText.text = HourlyEnergyConsumption.ToString("0.0") + " e/h\n" + SpikeEnergyDelta.ToString("0.0") + " e";
+                EnergyUiText.text = HourlyEnergyConsumption.ToString("0.0") + " e/h\n" + SpikeEnergyConsumption.ToString("0.0") + " e";
             }
             else
             {
-                EnergyDisplayText.text = HourlyEnergyConsumption.ToString("0.0") + "\n" + SpikeEnergyDelta.ToString("0.0");
+                EnergyUiText.text = HourlyEnergyConsumption.ToString("0.0") + "\n" + SpikeEnergyConsumption.ToString("0.0");
 
             }
         }
@@ -178,16 +176,17 @@ class PlayerPatches
         {
             if (Config.DrawEnergyUnit_)
             {
-                EnergyDisplayText.text = HourlyEnergyConsumption.ToString("0.0") + " e/h";
+                EnergyUiText.text = HourlyEnergyConsumption.ToString("0.0") + " e/h";
             }
             else
             {
-                EnergyDisplayText.text = HourlyEnergyConsumption.ToString("0.0");
+                EnergyUiText.text = HourlyEnergyConsumption.ToString("0.0");
             }
         }
-        EnergyDisplayUI.SetActive(true);
+        EnergyUiObject.SetActive(true);
         PreviousEnergyLevel = currentEnergyLevel;
         OldTimeDelta = timeDelta;
+        OldEnergyDelta = energyDelta;
         Timestamp = DayNightCycle.main.timePassedAsFloat;
     }
     [HarmonyPatch(nameof(Player.SetCurrentSub))]
