@@ -5,11 +5,11 @@ using UnityEngine;
 namespace Rm_PowerModifier;
 public class Dbg
 {
-    private static Dictionary<string, float> PreviousFloat;
-    private static Dictionary<string, bool> PreviousBool;
+    private static Dictionary<string, float> PreviousFloat = new();
+    private static Dictionary<string, bool> PreviousBool = new();
+    private static HashSet<string> KnownStrings = new();
     public static void FloatChanged(string label, float value, int digits = 0)
     {
-        PreviousFloat ??= new();
         float previous = PreviousFloat.GetOrDefault(label, value + 1);
         float value_rounded = (float)System.Math.Round(value, digits);
         if (previous != value_rounded)
@@ -26,15 +26,19 @@ public class Dbg
     }
     public static void BoolChanged(string label, bool value)
     {
-        PreviousBool ??= new();
         bool previous = PreviousBool.GetOrDefault(label, !value);
         if (previous != value)
         {
-
             Plugin.Logger.LogInfo($"#{label}: {value}");
             PreviousBool.Remove(label);
             PreviousBool.Add(label, value);
-
+        }
+    }
+    public static void StringUnique(string str)
+    {
+        if (KnownStrings.Add(str))
+        {
+            Plugin.Logger.LogInfo("#Unique String: " + str);
         }
     }
     public static void Bool(string label, bool value)
