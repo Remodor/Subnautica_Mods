@@ -71,10 +71,10 @@ class PlayerPatches
     private static float HourlyEnergyConsumption = 0;
     private static float SpikeEnergyConsumption = 0;
     private static float EnergyDeltaSlope = 0;
-    private static float OldEnergyDeltaSlope = 0;
     private static float OldEnergyDelta = 0;
     private static float OldTimeDelta = 0;
     private static int SpikeLingerDuration = 0;
+    private static bool HadSpike = false;
     private static float SampleInterval = 0.1f;
     private static bool _Reset = true;
     internal static EnergyMixin CurrentToolEnergyMixin = null;
@@ -131,33 +131,37 @@ class PlayerPatches
         {
             return;
         }
-        float energyDelta = PreviousEnergyLevel - currentEnergyLevel;
-        OldEnergyDeltaSlope = EnergyDeltaSlope;
+        float energyDelta = currentEnergyLevel - PreviousEnergyLevel;
         EnergyDeltaSlope = energyDelta - OldEnergyDelta;
+        float EnergyDeltaGain = Mathf.Abs(energyDelta) - Mathf.Abs(OldEnergyDelta);
 #if DEBUG
         Dbg.FloatChanged("energyDelta", energyDelta, 1);
         Dbg.FloatChanged("timeDelta", timeDelta, 1);
         Dbg.FloatChanged("EnergyDeltaSlope", EnergyDeltaSlope, 1);
-        Dbg.FloatChanged("OldEnergyDeltaSlope", OldEnergyDeltaSlope, 1);
 #endif
-        if (Mathf.Abs(EnergyDeltaSlope) > Config.SpikeThreshold_)
+        if (HadSpike)
         {
-            var slopeSum = EnergyDeltaSlope + OldEnergyDeltaSlope;
+            HadSpike = false;
 #if DEBUG
-            Dbg.FloatChanged("slopeSum", slopeSum);
+            Dbg.Print("HadSike");
 #endif
-            if (Mathf.Abs(slopeSum) < Config.SpikeThreshold_)
-            {
-                SpikeLingerDuration = Config.SpikeLingerDuration_;
-                SpikeEnergyConsumption = OldEnergyDeltaSlope - slopeSum;
-                HourlyEnergyConsumption = energyDelta * 50f / timeDelta;
-            }
+            HourlyEnergyConsumption = Config.InverseEnergyDisplay_ * energyDelta * 50f / timeDelta;
+        }
+        else if (EnergyDeltaGain > Config.SpikeThreshold_)
+        {
+            HadSpike = true;
+#if DEBUG
+            Dbg.Print("Spike");
+#endif
+            SpikeLingerDuration = Config.SpikeLingerDuration_;
+            SpikeEnergyConsumption = Config.InverseEnergyDisplay_ * EnergyDeltaSlope;
+            HourlyEnergyConsumption = Config.InverseEnergyDisplay_ * OldEnergyDelta * 50f / OldTimeDelta;
         }
         else
         {
             float totalEnergyDelta = OldEnergyDelta + energyDelta;
             float totalTimeDelta = OldTimeDelta + timeDelta;
-            HourlyEnergyConsumption = totalEnergyDelta * 50f / totalTimeDelta;
+            HourlyEnergyConsumption = Config.InverseEnergyDisplay_ * totalEnergyDelta * 50f / totalTimeDelta;
         }
         if (SpikeLingerDuration > 0)
         {
