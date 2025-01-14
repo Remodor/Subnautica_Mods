@@ -70,7 +70,6 @@ class PlayerPatches
     private static float PreviousEnergyLevel = 0;
     private static float HourlyEnergyConsumption = 0;
     private static float SpikeEnergyConsumption = 0;
-    private static float EnergyDeltaSlope = 0;
     private static float OldEnergyDelta = 0;
     private static float OldTimeDelta = 0;
     private static int SpikeLingerDuration = 0;
@@ -132,12 +131,11 @@ class PlayerPatches
             return;
         }
         float energyDelta = currentEnergyLevel - PreviousEnergyLevel;
-        EnergyDeltaSlope = energyDelta - OldEnergyDelta;
-        float EnergyDeltaGain = Mathf.Abs(energyDelta) - Mathf.Abs(OldEnergyDelta);
+        float energyDeltaSlope = energyDelta - OldEnergyDelta;
 #if DEBUG
         Dbg.FloatChanged("energyDelta", energyDelta, 1);
         Dbg.FloatChanged("timeDelta", timeDelta, 1);
-        Dbg.FloatChanged("EnergyDeltaSlope", EnergyDeltaSlope, 1);
+        Dbg.FloatChanged("energyDeltaSlope", energyDeltaSlope, 1);
 #endif
         if (HadSpike)
         {
@@ -147,14 +145,14 @@ class PlayerPatches
 #endif
             HourlyEnergyConsumption = Config.InverseEnergyDisplay_ * energyDelta * 50f / timeDelta;
         }
-        else if (EnergyDeltaGain > Config.SpikeThreshold_)
+        else if (energyDeltaSlope < Config.SpikeThreshold_ && energyDelta < 0)
         {
             HadSpike = true;
 #if DEBUG
             Dbg.Print("Spike");
 #endif
             SpikeLingerDuration = Config.SpikeLingerDuration_;
-            SpikeEnergyConsumption = Config.InverseEnergyDisplay_ * EnergyDeltaSlope;
+            SpikeEnergyConsumption = Config.InverseEnergyDisplay_ * energyDeltaSlope;
             HourlyEnergyConsumption = Config.InverseEnergyDisplay_ * OldEnergyDelta * 50f / OldTimeDelta;
         }
         else
